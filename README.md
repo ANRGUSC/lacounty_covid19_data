@@ -32,4 +32,5 @@ For those who are interested only in analysing the data, we provide the data in 
 ## Plots
 We have generated plots using the data retrieved from LA county press releases. These plots show the time-series data for confirmed COVID-19 positive cases (daily and cumulative) in the communities and cities within LA County that are showing the most number of cases.
 
+## Questions
 For any questions about this data set or tools, please contact Dr. Gowri Sankar Ramachandran (gsramach@usc.edu) or Prof. Bhaskar Krishnamachari (bkrishna@usc.edu). 
