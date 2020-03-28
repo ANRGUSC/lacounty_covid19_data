@@ -44,60 +44,64 @@ def parse_list(list_object):
 #input:
 #urlcomp -> URL for the data
 def get_data(urlcomp):
+    global starting_date,data_array
     rcomp = requests.get(urlcomp, headers=headers)
-    #print(rcomp.text)
-    data_array[starting_date]=[]
-    soup = BeautifulSoup(rcomp.text,"lxml")
-    html_content = soup.prettify()
-    #print(html_content)
-    for ultag in soup.find_all('ul'):
-        #print(ultag.text)
-        for litag in ultag.find_all('li'):
-            returned_output=parse_list(litag.text)
-            if returned_output is not None:
-                print(returned_output)
-                data_array[starting_date].append(returned_output)  
-    if len(data_array[starting_date])==0:
-        #print("no data found for day " + str(starting_date))
-        for litag in soup.find_all('li'):
+    if "Please see the locations were cases have occurred:" in rcomp.text:
+        print("Case numbers found")
+        #print(rcomp.text)
+        data_array[starting_date]=[]
+        soup = BeautifulSoup(rcomp.text,"lxml")
+        html_content = soup.prettify()
+        #print(html_content)
+        for ultag in soup.find_all('ul'):
+            #print(ultag.text)
+            for litag in ultag.find_all('li'):
                 returned_output=parse_list(litag.text)
                 if returned_output is not None:
-                    print(returned_output)
-                    data_array[starting_date].append(returned_output)
-    return data_array
+                    #print(returned_output)
+                    data_array[starting_date].append(returned_output)  
+        if len(data_array[starting_date])==0:
+            #print("no data found for day " + str(starting_date))
+            for litag in soup.find_all('li'):
+                    returned_output=parse_list(litag.text)
+                    if returned_output is not None:
+                        #print(returned_output)
+                        data_array[starting_date].append(returned_output)
+        starting_date=starting_date+1                
+        return
     
 
 
 #execution starts here
-urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2268"
-get_data(urlcomp)
-#print(data_array)
-starting_date=starting_date+1
-for i in range(2271,2276):
-    urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(i)
+for press_release_id in range(2268,2286):
+    urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
     get_data(urlcomp)
-    #print(data_array)
-    starting_date=starting_date+1
-urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2277"
-get_data(urlcomp)
-#print(data_array)
-starting_date=starting_date+1
-for i in range(2279,2281):
-   urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(i)
-   get_data(urlcomp)
-   print(data_array)
-   starting_date=starting_date+1
-urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2282"
-get_data(urlcomp)
-#print(data_array)
-starting_date=starting_date+1
-urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2284"
-get_data(urlcomp)
-#print(data_array)
-starting_date=starting_date+1
-urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2285"
-get_data(urlcomp)
-print(data_array)
-starting_date=starting_date+1
 
-print(data_array[21])    
+#print(data_array)
+# for i in range(2271,2276):
+#     urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(i)
+#     get_data(urlcomp)
+#     #print(data_array)
+# urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2277"
+# get_data(urlcomp)
+#print(data_array)
+
+# for i in range(2279,2281):
+#    urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(i)
+#    get_data(urlcomp)
+   #print(data_array)
+
+# urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2282"
+# get_data(urlcomp)
+#print(data_array)
+
+# urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2284"
+# get_data(urlcomp)
+#print(data_array)
+
+# urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2285"
+# get_data(urlcomp)
+#print(data_array)
+
+
+print(data_array.keys())    
