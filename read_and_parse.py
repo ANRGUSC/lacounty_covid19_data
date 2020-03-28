@@ -29,12 +29,13 @@ for i in range(2271,2285):
     soup = BeautifulSoup(rcomp.text,"lxml")
     for ultag in soup.find_all('ul'):
     	for litag in ultag.find_all('li'):
-           if "--" in litag.text:
+           if "--" in litag.text and "to" not in litag.text and "over" not in litag.text:
+               print(litag.text)
                data_array[starting_date].append(litag.text.split("--"))
     starting_date=starting_date+1
 
 
-print(data_array)    
+#print(data_array)    
 # Write to .CSV
 #f = open('27mar.csv', "w")
 #f.write(rcomp.text)
