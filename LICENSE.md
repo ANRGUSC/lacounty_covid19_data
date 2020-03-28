@@ -1,4 +1,4 @@
-Copyright (c) 2018, Autonomous Networks Research Group. All rights reserved.
+Copyright (c) 2020, Autonomous Networks Research Group. All rights reserved.
 
 Developed by: Autonomous Networks Research Group (ANRG) University of Southern California http://anrg.usc.edu/
 
