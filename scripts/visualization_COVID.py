@@ -1,3 +1,12 @@
+
+# Copyright (c) 2020, Autonomous Networks Research Group. All rights reserved.
+#      contributors: Mehrdad Kiamari, Gowri Ramachandran, Bhaskar Krishnamachari
+#      Read license file in main directory for more details  
+# 
+# This script fetches the data from LA County's public health press releases, and 
+# creates a dictionary (JSON file) for additional processing
+
+
 import json
 import re
 import matplotlib.pyplot as plt
