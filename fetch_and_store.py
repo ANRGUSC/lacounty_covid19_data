@@ -12,8 +12,15 @@ import matplotlib.pyplot as plt
 #headers for GET requests
 headers = {'accept': "application/json", 'accept': "text/csv"}
 
+#global variables for storing day and the data_array
 starting_date=16 #the data for Covid-19 is available from 16th of March
 data_array={} #this dictionary will store all the data
+
+def write_json_to_file():
+    global data_array
+    out_file = open('lacounty_covid.json','w+')
+    json.dump(data_array,out_file)
+    return
 
 
 #the following function retrieves the data from bulleted list
@@ -76,32 +83,7 @@ def get_data(urlcomp):
 for press_release_id in range(2268,2286):
     urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
     get_data(urlcomp)
-
-#print(data_array)
-# for i in range(2271,2276):
-#     urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(i)
-#     get_data(urlcomp)
-#     #print(data_array)
-# urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2277"
-# get_data(urlcomp)
-#print(data_array)
-
-# for i in range(2279,2281):
-#    urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(i)
-#    get_data(urlcomp)
-   #print(data_array)
-
-# urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2282"
-# get_data(urlcomp)
-#print(data_array)
-
-# urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2284"
-# get_data(urlcomp)
-#print(data_array)
-
-# urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2285"
-# get_data(urlcomp)
-#print(data_array)
-
+#writing dictionary to a file
+write_json_to_file()    
 
 print(data_array.keys())    
