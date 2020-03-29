@@ -13,6 +13,7 @@ from lxml import etree
 from lxml import html
 from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
+import os
 
 #headers for GET requests
 headers = {'accept': "application/json", 'accept': "text/csv"}
@@ -20,26 +21,70 @@ headers = {'accept': "application/json", 'accept': "text/csv"}
 #global variables for storing day and the data_array
 starting_date=16 #the data for Covid-19 is available from 16th of March
 data_array={} #this dictionary will store all the data
+case_count={} #dictionary hold the case count
+lacounty_total_case_count={} #count from the press release
 
-def write_json_to_file():
-    global data_array
-    out_file = open('lacounty_covid.json','w+')
-    json.dump(data_array,out_file)
+#write json to a file
+def write_json_to_file(filename,array):
+    script_dir = os.path.dirname(__file__)
+    rel_path = "../data/"+filename
+    abs_file_path = os.path.join(script_dir, rel_path)
+    out_file = open(abs_file_path,'w+')
+    json.dump(array,out_file)
     return
 
+#filters duplicate entries
+def remove_element(input_string):
+    global data_array
+    for key,value in data_array.items():
+        item_to_remove=None
+        for l in range(0,len(value)):
+            #print(data_array[key][l])
+            if str(data_array[key][l][0]) == "Pasadena ":
+                item_to_remove=l
+
+        #print(item_to_remove)
+        if item_to_remove != None:
+            del(data_array[key][item_to_remove])
+    return
+
+#get count from press release
+def get_count():
+    global data_array,lacounty_total_case_count
+    for key,value in data_array.items():
+        #print(key)
+        #print(value[0])
+        lacounty_total_case_count[key]=value[0]
+    return
+
+            
+#counts the number of cases
+def count_cases():
+    global case_count
+    #case counting
+    cnt=0
+    for key,value in data_array.items():
+        cnt=0
+        for i in value:
+            if "Los Angeles County (excl. LB and Pas)" not in i[0]:
+                cnt=cnt+int(i[1])
+        case_count[key]=cnt    
+    return case_count
 
 #the following function retrieves the data from bulleted list
 #list_object - Body of the list item (text content)
 def parse_list(list_object):
-    if ("Hospitalized (Ever)" not in list_object and 
-                    "to" not in list_object and  
-                    "over" not in list_object and
+    if ("Hospitalized (Ever)" not in list_object and
+                    "Death" not in list_object and
+                    "Investigated Cases" not in list_object and
+                    "0 to 17" not in list_object and
+                    "18 to 40" not in list_object and
+                    "41 to 65" not in list_object and
+                    "over 65" not in list_object and
+                    #"Los Angeles County (excl. LB and Pas)" not in list_object and
                     "http" not in list_object and
-                    "County" not in list_object and
-                    "Long Beach" not in list_object and
-                    "Pasadena" not in list_object
+                    "Long Beach" not in list_object
                    ):
-                    #print(list_object)
                     if "\t" in list_object or "--" in list_object:
                         if "\t" in list_object:
                             out=list_object.split("\t")
@@ -48,7 +93,23 @@ def parse_list(list_object):
                         out[0]=str(out[0]).replace("*","")
                         out[0]=str(out[0]).replace("--","")
                         out[1]=str(out[1]).replace("--","0")
-                        out[1]=str(out[1]).replace("0 ","")
+                        out[1]=str(out[1].replace("<",""))
+                        out[1]=str(out[1]).lstrip("0")
+                        out[1]=str(out[1]).replace("*","")
+                        if not out[1]:
+                            out[1]="0"
+                        #out[1]=str(out[1]).replace("","0")
+                        #print(out[1])
+                        #out[1]=str(out[1]).replace("0 1","1")
+                        #out[1]=str(out[1]).replace("0 2","2")
+                        #out[1]=str(out[1]).replace("0 3","3")
+                        #out[1]=str(out[1]).replace("0 4","4")
+                        #out[1]=str(out[1]).replace("0 5","5")
+                        #out[1]=str(out[1]).replace("0 6","6")
+                        #out[1]=str(out[1]).replace("0 7","7")
+                        #out[1]=str(out[1]).replace("0 8","8")
+                        #out[1]=str(out[1]).replace("0 9","9")
+                        #out[1]=str(out[1].replace("<",""))
                         return out
 
 
@@ -72,7 +133,7 @@ def get_data(urlcomp):
                 if returned_output is not None:
                     #print(returned_output)
                     data_array[starting_date].append(returned_output)  
-        if len(data_array[starting_date])==0:
+        if len(data_array[starting_date])<=3:
             #print("no data found for day " + str(starting_date))
             for litag in soup.find_all('li'):
                     returned_output=parse_list(litag.text)
@@ -85,10 +146,19 @@ def get_data(urlcomp):
 
 
 #execution starts here
-for press_release_id in range(2268,2286):
+for press_release_id in range(2268,2288):
     urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
     get_data(urlcomp)
-#writing dictionary to a file
-write_json_to_file()    
 
-print(data_array.keys())    
+#writing dictionary to a file
+write_json_to_file("lacounty_covid.json",data_array)    
+
+#filter to remove duplicate entries from the list based on the string
+remove_element("Pasadena ")
+
+get_count()
+#print(data_array[21])
+
+#counting case
+print(lacounty_total_case_count)
+write_json_to_file("lacounty_total_case_count.json",lacounty_total_case_count)   
