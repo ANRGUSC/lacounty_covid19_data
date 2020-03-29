@@ -8,6 +8,13 @@ import json
 import re
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+
+#setting up the file path
+script_dir = os.path.dirname(__file__)
+rel_path = "../data/lacounty_covid.json"
+abs_file_path = os.path.join(script_dir, rel_path)
+
 
 class community:
 	def __init__(self,name,actual_name,Today_date):
@@ -55,7 +62,7 @@ def main(top_i_comm, type_plot,Today_date):
 	list_communities = [] # list of all community objects
 	list_pair = []	
         #make sure the json file is in the right directory
-	with open('lacounty_covid.json') as json_file:
+	with open(abs_file_path) as json_file:
 		data = json.load(json_file)
 		for day in sorted([int(k) for k in data.keys()]):
 			for i in range(len(data[str(day)])):
