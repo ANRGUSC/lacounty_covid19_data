@@ -1,17 +1,22 @@
-
 import csv
 import json
+import os
+
+#setting up the file path
+script_dir = os.path.dirname(__file__)
+rel_path = "../data/population.csv"
+abs_file_path = os.path.join(script_dir, rel_path)
+
+#this dictionaty will hold the parsed data in JSON format
 population_dict=[]
 
-with open('sheet.csv', 'r') as csvfile:
+#parsing CSV
+with open(abs_file_path, 'r') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',')
-    print(spamreader)
     for row in spamreader:
-        print(row[0])
         population_dict.append([row[0],row[1]])
 
-
-print(population_dict)
+#writing dictionary to a JSON file
 out_file = open('population.json','w+')
 json.dump(population_dict, out_file)
 
