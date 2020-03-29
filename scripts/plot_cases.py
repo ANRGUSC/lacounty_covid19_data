@@ -1,3 +1,9 @@
+# Copyright (c) 2020, Autonomous Networks Research Group. All rights reserved.
+#      contributors: Gowri Ramachandran, Mehrdad Kiamari, Bhaskar Krishnamachari
+#      Read license file in main directory for more details  
+# 
+# This script generates plots of the covid-19 data from LA County 
+
 import json
 import re
 import matplotlib.pyplot as plt
