@@ -56,7 +56,8 @@ class community:
 def main(top_i_comm, type_plot,Today_date):
 	dict_county = {} # dictionary of all community objects
 	list_communities = [] # list of all community objects
-	list_pair = []			
+	list_pair = []	
+        #make sure the json file is in the right directory
 	with open('lacounty_covid.json') as json_file:
 		data = json.load(json_file)
 		for day in sorted([int(k) for k in data.keys()]):
