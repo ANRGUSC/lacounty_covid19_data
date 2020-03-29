@@ -1,11 +1,8 @@
-
 # Copyright (c) 2020, Autonomous Networks Research Group. All rights reserved.
-#      contributors: Mehrdad Kiamari, Gowri Ramachandran, Bhaskar Krishnamachari
+#      contributors: Gowri Ramachandran, Mehrdad Kiamari, Bhaskar Krishnamachari
 #      Read license file in main directory for more details  
 # 
-# This script fetches the data from LA County's public health press releases, and 
-# creates a dictionary (JSON file) for additional processing
-
+# This script generates plots of the covid-19 data from LA County 
 
 import json
 import re
@@ -81,7 +78,9 @@ def main(top_i_comm, type_plot,Today_date):
 			dict_county[communiuty].calculate_total_confirmed_so_far()
 			#print(dict_county[communiuty].total_confirmed_so_far)
 
-		days = list(range(16,Today_date))
+		#days = list(range(16,Today_date))
+		days = list(range(1,Today_date-16 +1))
+
 		# sort communities in the whole list based on total confirmed cases so far and plot top i communities
 		newlist = sorted(list_communities,key=lambda x: x.total_confirmed_so_far, reverse=True)
 		for en,communiuty_obj in enumerate(newlist):
@@ -92,8 +91,10 @@ def main(top_i_comm, type_plot,Today_date):
 				#print(top_i_comm, communiuty_obj.plot_info(type_plot))
 				top_i_comm -= 1
 		plt.legend()
-		plt.xlabel('Days')
+		plt.xlabel('Days since March 16, 2020')
 		plt.ylabel('Number of Confirmed Cases')
+		plt.yscale('log')
+		plt.grid(True)
 		plt.title(type_plot)
 		plt.show()		
 	
@@ -101,6 +102,6 @@ def main(top_i_comm, type_plot,Today_date):
 if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
-	display_mode = 'daily'
+	display_mode = 'cumulative'
 	number_of_days_passed_from_16th = 12
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)		
