@@ -54,21 +54,17 @@ class community:
 def get_population_vec(list_communities):
 	with open('population.json') as json_file_pop:
 		data = json.load(json_file_pop)
-		#print(data)
-		dictionary_population_commnunities ={}
-		for instance in data:
-			dictionary_population_commnunities[instance[0].strip().split('--')[0]] = int(instance[1].strip())
-		#print(dictionary_population_commnunities)
-		#raise NameError('HiThere')
+		
 		output_list = []
 		for communiuty_obj in list_communities:
-			temp = [val for key,val in dictionary_population_commnunities.items() if communiuty_obj.actual_name == key]
+			temp = [val for key,val in data.items() if communiuty_obj.actual_name == key.strip().split('--')[0]]
 			if temp :
-		 		output_list.append(temp.pop())
+		 		output_list.append(int(temp.pop().strip()))
 		if len(output_list) == len(list_communities):
 			output = np.asarray(output_list)
 		else:
-			raise NameError('The name of one of communities has NOT been found!')	 		
+			raise NameError('The name of one of communities has NOT been found!')	
+
 		return output
 		
 def main(top_i_comm, type_plot,Today_date):
