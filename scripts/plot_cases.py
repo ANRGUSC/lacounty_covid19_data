@@ -116,7 +116,7 @@ def main(top_i_comm, type_plot,Today_date):
 			if communiuty_obj.name != '-investigatedcases' and communiuty_obj.name !='-underinvestigation' and top_i_comm > 0:
 				# append this city to the list
 				list_selected_communities.append(communiuty_obj)
-				plt.plot(days, communiuty_obj.plot_info(type_plot),'o-',label = communiuty_obj.actual_name)
+				plt.plot(days, communiuty_obj.plot_info(type_plot)/(get_population_vec([communiuty_obj])[0]*1.0),'o-',label = communiuty_obj.actual_name)
 				top_i_comm -= 1
 		plt.legend()
 		plt.xlabel('Days since March 16, 2020')
