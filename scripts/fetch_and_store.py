@@ -40,7 +40,7 @@ def remove_element(input_string):
         item_to_remove=None
         for l in range(0,len(value)):
             #print(data_array[key][l])
-            if str(data_array[key][l][0]) == "Pasadena ":
+            if str(data_array[key][l][0]) == input_string:
                 item_to_remove=l
 
         #print(item_to_remove)
@@ -81,7 +81,7 @@ def parse_list(list_object):
                     "18 to 40" not in list_object and
                     "41 to 65" not in list_object and
                     "over 65" not in list_object and
-                    #"Los Angeles County (excl. LB and Pas)" not in list_object and
+                    "City of Los Angeles" not in list_object and
                     "http" not in list_object and
                     "Long Beach" not in list_object
                    ):
@@ -89,7 +89,7 @@ def parse_list(list_object):
                         if "\t" in list_object:
                             out=list_object.split("\t")
                         else:
-                            out=list_object.split("--")
+                            out=list_object.split("--")    
                         out[0]=str(out[0]).replace("*","")
                         out[0]=str(out[0]).replace("--","")
                         out[1]=str(out[1]).replace("--","0")
@@ -150,9 +150,6 @@ for press_release_id in range(2268,2288):
     urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
     get_data(urlcomp)
 
-#writing dictionary to a file
-write_json_to_file("lacounty_covid.json",data_array)    
-
 #filter to remove duplicate entries from the list based on the string
 remove_element("Pasadena ")
 
@@ -162,3 +159,17 @@ get_count()
 #counting case
 print(lacounty_total_case_count)
 write_json_to_file("lacounty_total_case_count.json",lacounty_total_case_count)   
+
+#filter to remove duplicate entries from the list based on the string
+remove_element("Los Angeles County (excl. LB and Pas) ")
+for key,value in data_array.items():
+    del(data_array[key][0])
+    print(data_array[key][0])
+    if "Los Angeles County (excl. LB and Pas)" in data_array[key][0][0]:
+        del(data_array[key][0])
+        #print(data_array[key][0])
+        
+#print(data_array)
+
+#writing dictionary to a file
+write_json_to_file("lacounty_covid.json",data_array)    
