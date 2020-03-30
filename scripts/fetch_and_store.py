@@ -40,7 +40,8 @@ def remove_element(input_string):
         item_to_remove=None
         for l in range(0,len(value)):
             #print(data_array[key][l])
-            if str(data_array[key][l][0]) == input_string:
+            if str(data_array[key][l][0].strip()) == input_string:
+                print(data_array[key][l][0])
                 item_to_remove=l
 
         #print(item_to_remove)
@@ -146,12 +147,13 @@ def get_data(urlcomp):
 
 
 #execution starts here
-for press_release_id in range(2268,2288):
+for press_release_id in range(2268,2289):
     urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
     get_data(urlcomp)
 
 #filter to remove duplicate entries from the list based on the string
-remove_element("Pasadena ")
+remove_element("Pasadena")
+remove_element("Los Angeles")
 
 get_count()
 #print(data_array[21])
@@ -161,7 +163,8 @@ print(lacounty_total_case_count)
 write_json_to_file("lacounty_total_case_count.json",lacounty_total_case_count)   
 
 #filter to remove duplicate entries from the list based on the string
-remove_element("Los Angeles County (excl. LB and Pas) ")
+remove_element("Los Angeles County (excl. LB and Pas)")
+remove_element("Los Angeles")
 for key,value in data_array.items():
     del(data_array[key][0])
     print(data_array[key][0])
