@@ -180,23 +180,20 @@ def generate_heatmap_bydate(d):
     merged.plot('Number of cases', cmap=color, linewidth=0.8, ax=ax, edgecolor='0.8', figsize=(40,20))
     # plt.show()
     outfile = 'maps/%s.png'%(d)
-    plt.savefig(outfile)
+    plt.savefig(outfile,bbox_inches='tight')
 
 def generate_heatmap():
     os.chdir('../map/')
     covid = pd.read_csv('Covid-19.csv',header=0)
     date_list = covid['Time Stamp'].unique()
     for d in date_list:
-        print(d)
         generate_heatmap_bydate(d)
 
 
 if __name__ == "__main__":
-    print('Process data to generate input file for ARCGIS online map')
     # retrieve_gps() # Run this to generate latlon.csv using the API 
     # process_population()
     # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     # process_covid()
-    # retrieve_covid_date()
-    
+    # retrieve_covid_date()    
     generate_heatmap()
