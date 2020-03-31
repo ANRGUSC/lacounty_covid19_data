@@ -116,15 +116,15 @@ def main(top_i_comm, type_plot,Today_date):
 				top_i_comm -= 1
 		plt.legend()
 		plt.xlabel('Days since March 16, 2020')
-		plt.ylabel('Cases')
+		plt.ylabel('Cases/population (Case Density)')
 		plt.grid(True)
 		# plt.yscale('log')
-		#plt.title(type_plot)
+		plt.title('Case Density')
 		plt.show()		
 		
 if __name__ == "__main__":
-	top_k_community_with_highest_confirmed = 6
+	top_k_community_with_highest_confirmed = 5
 	# Display mode: daily or cumulative
 	display_mode = 'cumulative'
-	number_of_days_passed_from_16th = 13
+	number_of_days_passed_from_16th = 14
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)		
