@@ -7,12 +7,21 @@
 import os
 import sys
 import pandas as pd 
+import matplotlib.pyplot as plt
 import json
 from opencage.geocoder import OpenCageGeocode
+import re
+import geopandas as gpd
+import seaborn as sns
+sns.set(style="darkgrid")
+
+
+
 
 API_KEY = '576004cefa1b43648fd6cd7059ae8196' # get api key from:  https://opencagedata.com
 covid_json = 'lacounty_covid.json'
 population_json = 'population.json'
+population_pdf = 'population.pdf'
 
 
 def retrieve_all_regions():
@@ -69,7 +78,7 @@ def process_covid():
     
     c = 0
     for k,v in covid.items():
-        ts = '03/'+k+'/2020'
+        ts = '03-'+k+'-2020'
         for value in v:
             tmp = value[0].strip()
             try:
@@ -84,12 +93,13 @@ def process_covid():
                 lat = latlon_covid.loc[latlon_covid['Region']==reg,'Latitude'].values[0]
                 lon = latlon_covid.loc[latlon_covid['Region']==reg,'Longitude'].values[0]
                 cases =  value[1].strip()
+                cases = re.sub("[^0-9]", "", cases)
                 df.loc[c] = [ts,reg,lat,lon,cases]
                 c = c+1
             except Exception as e:
                 print('Something wrong while parsing ')
                 print(tmp)
-    df.to_csv ('../map/map_covid.csv', index = False, header=True)
+    df.to_csv ('../map/Covid-19.csv', index = False, header=True)
 
 
 def retrieve_gps():
@@ -134,9 +144,59 @@ def retrieve_gps_covid():
             print(e)
     latlon.to_csv (r'../map/latlon_covid.csv', index = False, header=True)    
 
+def retrieve_covid_date():
+    os.chdir('../map/')
+    covid = pd.read_csv('Covid-19.csv',header=0)
+    if not os.path.exists('covidbydate'):
+        os.makedirs('covidbydate')
+    date_list = covid['Time Stamp'].unique()
+    for d in date_list:
+        idx = covid.index[covid['Time Stamp'] == d]
+        sub = covid.iloc[idx,:]
+        sub = sub.reset_index(drop=True)
+        file_name = 'covidbydate/%s.csv'%(d)
+        sub.index.name = 'ID'
+        sub.to_csv (file_name, index = True, header=True)  
+
+def generate_heatmap_bydate(d):
+    os.chdir('../map/')
+    regions = gpd.read_file('la/la.shp')
+    filename = 'covidbydate/%s.csv'%(d)
+    data = pd.read_csv(filename,header=0)
+    merged = regions.set_index('name').join(data.set_index('Region'))
+    merged = merged.reset_index()
+    merged = merged.fillna(0)
+
+    fig, ax = plt.subplots(1, figsize=(40, 20))
+    ax.axis('off')
+    title = 'Heat Map of Covid-19, Los Angeles County (%s)' %(d)
+    ax.set_title(title, fontdict={'fontsize': '40', 'fontweight' : '3'})
+    color = 'Oranges'
+    vmin, vmax = 0, 231
+    sm = plt.cm.ScalarMappable(cmap=color, norm=plt.Normalize(vmin=vmin, vmax=vmax))
+    sm._A = []
+    cbar = fig.colorbar(sm)
+    cbar.ax.tick_params(labelsize=20) 
+    merged.plot('Number of cases', cmap=color, linewidth=0.8, ax=ax, edgecolor='0.8', figsize=(40,20))
+    # plt.show()
+    outfile = 'maps/%s.png'%(d)
+    plt.savefig(outfile)
+
+def generate_heatmap():
+    os.chdir('../map/')
+    covid = pd.read_csv('Covid-19.csv',header=0)
+    date_list = covid['Time Stamp'].unique()
+    for d in date_list:
+        print(d)
+        generate_heatmap_bydate(d)
+
+
 if __name__ == "__main__":
     print('Process data to generate input file for ARCGIS online map')
     # retrieve_gps() # Run this to generate latlon.csv using the API 
     # process_population()
     # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     # process_covid()
+    # retrieve_covid_date()
+    
+    generate_heatmap()
