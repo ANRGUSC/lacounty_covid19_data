@@ -80,7 +80,11 @@ def process_covid():
     df = pd.DataFrame(columns = columns)
     c = 0
     for k,v in covid.items():
-        ts = '03-'+k+'-2020'
+        if int(k)<32:
+            ts = '03-'+k+'-2020'
+        else:
+            d = int(k)-31
+            ts = '04-'+str(d)+'-2020'
         for value in v:
             tmp = value[0].strip()
             try:
@@ -200,13 +204,15 @@ def retrieve_covid_date():
 
 
 def generate_heatmap_bydate(d):
+    mapfold='../map'
+    if not os.path.exists(mapfold):
+        os.makedirs(mapfold)
     os.chdir('../data/')
     covid = pd.read_csv('Covid-19-density.csv',header=0)
     max_den = covid['Density'].max()
     regions = gpd.read_file('shapefile/la.shp')
     filename = 'dailycases/%s.csv'%(d)
     data = pd.read_csv(filename,header=0)
-
     merged = regions.set_index('name').join(data.set_index('Region'))
     merged = merged.reset_index()
     merged = merged.fillna(0)
@@ -237,6 +243,8 @@ if __name__ == "__main__":
     # all_regions = retrieve_all_regions()
     # retrieve_gps(all_regions) # Run this to generate latlon.csv using the API 
     # process_population()
+
+    # Run daily
     # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     # process_covid()
     # process_density()
