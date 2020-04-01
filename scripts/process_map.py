@@ -13,8 +13,8 @@ import json
 from opencage.geocoder import OpenCageGeocode
 import re
 import geopandas as gpd
-import seaborn as sns
-sns.set(style="darkgrid")
+# import seaborn as sns
+# sns.set(style="darkgrid")
 
 
 
@@ -22,25 +22,28 @@ sns.set(style="darkgrid")
 API_KEY = '576004cefa1b43648fd6cd7059ae8196' # get api key from:  https://opencagedata.com
 covid_json = 'lacounty_covid.json'
 population_json = 'population.json'
-population_pdf = 'population.pdf'
 
 
 def retrieve_all_regions():
     os.chdir('../data/')
-    df = pd.read_json(population_json)
-    data = df.iloc[:, 0]
-    regions = data.apply(lambda x: x.split('--')[0]).values.tolist()
-    regions = set(regions)
+    with open(population_json, 'r') as j:
+        regs = json.loads(j.read())
+    regions = set()
+    for k,v in regs.items():
+        reg = k.split('--')[0].strip()
+        regions.add(reg)
     return regions
 
 def process_population():
     os.chdir('../data/')
     latlon = pd.read_csv('latlon.csv',header=0)
-    df = pd.read_json(population_json)
-    for index, row in df.iterrows():
-        reg = row[0].split('--')[0].strip()
+
+    with open(population_json, 'r') as j:
+        regs = json.loads(j.read())
+    for k,v in regs.items():
+        reg = k.split('--')[0].strip()
         idx = latlon.index[latlon['Region'] == reg]
-        latlon.loc[idx,'Population'] = int(row[1])
+        latlon.loc[idx,'Population'] = int(v)
     latlon.to_csv (r'../data/processed_population.csv', index = False, header=True)
             
 def retrieve_all_regions_covid():
@@ -116,7 +119,6 @@ def process_density():
             idx = population.index[population['Region'] == row['Region']]
             cur_pop = population.loc[idx,'Population'].values[0]
             density = row['Number of cases']/(int(cur_pop))
-            print(density)
             covid_den.loc[c] = [row['Time Stamp'],row['Region'],row['Latitude'],row['Longitude'],density]
             c = c+1
         except Exception as e:
@@ -137,14 +139,14 @@ def retrieve_gps_by_region(reg):
         print('Can not retrieve region geo info!')
         print(e)    
 
-def retrieve_gps():
+def retrieve_gps(all_regions):
     key = API_KEY  
     geocoder = OpenCageGeocode(key)
     columns = ['Region','Latitude','Longitude']
     latlon = pd.DataFrame(columns=columns)
-    regions = retrieve_all_regions()
+    
     c = 0
-    for region in regions:
+    for region in all_regions:
         try:
             print(region)
             query = '%s, Los Angeles, USA'%(region)  
@@ -164,7 +166,6 @@ def retrieve_gps_covid():
     columns = ['Region','Latitude','Longitude']
     latlon = pd.DataFrame(columns=columns)
     regions = retrieve_all_regions_covid()
-    print(regions)
     c = 0
     for region in regions:
         try:
@@ -233,7 +234,8 @@ def generate_heatmap():
         generate_heatmap_bydate(d)
 
 if __name__ == "__main__":
-    # retrieve_gps() # Run this to generate latlon.csv using the API 
+    # all_regions = retrieve_all_regions()
+    # retrieve_gps(all_regions) # Run this to generate latlon.csv using the API 
     # process_population()
     # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     # process_covid()
