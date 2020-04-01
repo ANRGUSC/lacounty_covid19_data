@@ -147,7 +147,7 @@ def get_data(urlcomp):
 
 
 #execution starts here
-for press_release_id in range(2268,2289):
+for press_release_id in range(2268,2292):
     urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
     get_data(urlcomp)
 
