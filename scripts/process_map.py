@@ -15,6 +15,8 @@ import re
 import geopandas as gpd
 import requests
 from bs4 import BeautifulSoup
+import numpy as np
+import seaborn as sns
 
 
 
@@ -275,15 +277,45 @@ def aggregate_population():
     pop1_df.to_csv('../data/full_population.csv', index = False, header=True)
 
 
+def plot_caseden_popden(d):
+    import seaborn as sns
+
+    os.chdir('../data/')
+    casefile = 'dailycases/%s.csv'%(d)
+    caseden = pd.read_csv(casefile,header=0)
+    popden = pd.read_csv('population_density.csv',header=0)
+    merged = pd.merge(caseden, popden, on='Region')
+    colors = np.random.rand(len(merged))
+
+
+    fig = plt.figure()
+    ax = plt.gca()
+    fig = plt.figure()
+    ax = plt.gca()
+    ax.set_yscale('log')
+    ax.scatter(merged['Population Density'],merged['Density'], c='blue', alpha=0.5)    
+    t = 'Case Density vs Population Density on day %s'%(d)
+    plt.title(t)
+    plt.xlabel('Population Density')
+    plt.ylabel('Case Density')
+    plt.show()
+
+
+
 if __name__ == "__main__":
+    # Crawling intermediate data
     # all_regions = retrieve_all_regions()
     # retrieve_gps(all_regions) # Run this to generate latlon.csv using the API 
     # process_population()
     # extract_population()
     # aggregate_population()
+
     # Run daily
     # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     # process_covid()
     # process_density()
     # retrieve_covid_date()    
-    generate_heatmap()
+    # generate_heatmap()
+
+    # Plots
+    # plot_caseden_popden('04-1-2020')
