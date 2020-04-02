@@ -13,10 +13,7 @@ import json
 from opencage.geocoder import OpenCageGeocode
 import re
 import geopandas as gpd
-# import seaborn as sns
-# sns.set(style="darkgrid")
-
-
+import requests
 
 
 API_KEY = '576004cefa1b43648fd6cd7059ae8196' # get api key from:  https://opencagedata.com
@@ -204,7 +201,7 @@ def retrieve_covid_date():
 
 
 def generate_heatmap_bydate(d):
-    mapfold='../map'
+    mapfold='../plots/map'
     if not os.path.exists(mapfold):
         os.makedirs(mapfold)
     os.chdir('../data/')
@@ -229,7 +226,7 @@ def generate_heatmap_bydate(d):
     normalize = matplotlib.colors.Normalize(vmin=0, vmax=max_den)
     merged.plot('Density', cmap=color,norm=normalize, linewidth=0.8, ax=ax, edgecolor='0.8', figsize=(40,20))
     # plt.show()
-    outfile = '../map/%s.png'%(d)
+    outfile = '../plots/map/%s.png'%(d)
     plt.savefig(outfile,bbox_inches='tight')
 
 def generate_heatmap():
@@ -243,7 +240,6 @@ if __name__ == "__main__":
     # all_regions = retrieve_all_regions()
     # retrieve_gps(all_regions) # Run this to generate latlon.csv using the API 
     # process_population()
-
     # Run daily
     # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     # process_covid()
