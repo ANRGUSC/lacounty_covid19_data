@@ -14,11 +14,14 @@ from opencage.geocoder import OpenCageGeocode
 import re
 import geopandas as gpd
 import requests
+from bs4 import BeautifulSoup
+
 
 
 API_KEY = '576004cefa1b43648fd6cd7059ae8196' # get api key from:  https://opencagedata.com
 covid_json = 'lacounty_covid.json'
 population_json = 'population.json'
+density_csv = 'population_density.csv'
 
 
 def retrieve_all_regions():
@@ -111,7 +114,8 @@ def process_covid():
 def process_density():
     os.chdir('../data/')
     covid_agg = pd.read_csv('Covid-19-aggregated.csv',header=0)
-    population = pd.read_csv('processed_population.csv',header=0)
+    # population = pd.read_csv('processed_population.csv',header=0)
+    population = pd.read_csv('full_population.csv',header=0)
     columns = ['Time Stamp','Region', 'Latitude', 'Longitude','Density']
     covid_den = pd.DataFrame(columns=columns)
     c = 0
@@ -119,13 +123,15 @@ def process_density():
         try:
             idx = population.index[population['Region'] == row['Region']]
             cur_pop = population.loc[idx,'Population'].values[0]
+            cur_pop = cur_pop.replace(',','')
+            cur_pop = cur_pop.replace('.0','')
             density = row['Number of cases']/(int(cur_pop))
             covid_den.loc[c] = [row['Time Stamp'],row['Region'],row['Latitude'],row['Longitude'],density]
             c = c+1
+            print('Successful! '+row['Region'])
         except Exception as e:
             print('Can not find the community population of '+row['Region'])
-    covid_den.to_csv ('../data/Covid-19-density.csv', index = False, header=True)
-
+    covid_den.to_csv ('../data/nCovid-19-density.csv', index = False, header=True)
 
 def retrieve_gps_by_region(reg):
     key = API_KEY  
@@ -236,10 +242,45 @@ def generate_heatmap():
     for d in date_list:
         generate_heatmap_bydate(d)
 
+def extract_population():
+    pathUrl = 'https://maps.latimes.com/neighborhoods/population/density/neighborhood/list/?fbclid=IwAR0B_nuX0xi9wf0_6rRIizwhMJ4fvZTl1jVeRsz2WaHz-LDu3WI0aDHEJbY'
+    html = requests.get(pathUrl)
+    soup = BeautifulSoup(html.text, 'lxml')
+    text = soup.get_text(separator=u' ')
+    text = text.replace('\n', ' ').replace('\r', '').replace('"', '')
+    text = ' '.join(text.split())
+    tmp1 = text.split('name: ')
+    tmp2 = text.split('population: ')
+    columns = ['Region', 'Population']
+    popdf = pd.DataFrame(columns = columns)
+    c = 1
+    while c<266:
+        name = tmp1[c].split(',')[0]
+        pop = tmp2[c].split(', stratum:')[0]
+        print(pop)
+        popdf.loc[c-1] = [name,pop]
+        c = c+1
+    popdf.to_csv('../data/new_population.csv', index = False, header=True)
+
+def aggregate_population():
+    os.chdir('../data/')
+    pop1_df = pd.read_csv('new_population.csv',header=0)
+    pop2_df = pd.read_csv('processed_population.csv',header=0)
+    cur_regions = set(pop1_df['Region'].unique().flatten())
+    cur_idx = pop1_df.shape[0]+1
+    for index, row in pop2_df.iterrows():
+        if row['Region'] not in cur_regions:
+            pop1_df.loc[cur_idx] = [row['Region'],row['Population']]
+            cur_idx = cur_idx+1
+    pop1_df.to_csv('../data/full_population.csv', index = False, header=True)
+
+
 if __name__ == "__main__":
     # all_regions = retrieve_all_regions()
     # retrieve_gps(all_regions) # Run this to generate latlon.csv using the API 
     # process_population()
+    # extract_population()
+    # aggregate_population()
     # Run daily
     # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     # process_covid()
