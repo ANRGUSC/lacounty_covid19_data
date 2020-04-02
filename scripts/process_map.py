@@ -240,9 +240,10 @@ if __name__ == "__main__":
     # all_regions = retrieve_all_regions()
     # retrieve_gps(all_regions) # Run this to generate latlon.csv using the API 
     # process_population()
+
     # Run daily
     # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     # process_covid()
     # process_density()
     # retrieve_covid_date()    
-    generate_heatmap()
+    # generate_heatmap()
