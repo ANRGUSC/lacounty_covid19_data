@@ -2,6 +2,7 @@ import csv
 import json
 import os
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 
 #setting up the file path
 script_dir = os.path.dirname(__file__)
@@ -39,6 +40,7 @@ del(x_array[-1])
 plt.plot(x_array,new_case_array,marker='o', color='b')
 plt.xlabel("Days since March 17, 2020")
 plt.ylabel("Cases")
+plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
 plt.title("LA County Total New Cases")
-plt.yscale('log')
+#plt.yscale('log')
 plt.show()

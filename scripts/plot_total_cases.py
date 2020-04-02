@@ -2,6 +2,7 @@ import csv
 import json
 import os
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 
 #setting up the file path
 script_dir = os.path.dirname(__file__)
@@ -19,7 +20,7 @@ with open(abs_file_path, 'r') as jsonfile:
 print(reader)
 x_array=[]
 y_array=[]
-i=0;
+i=1;
 for key,value in reader.items():
     x_array.append(int(i))
     y_array.append(int(value[1]))
@@ -32,6 +33,7 @@ print(y_array.sort())
 plt.plot(x_array,y_array,marker='o', color='b')
 plt.xlabel("Days since March 16, 2020")
 plt.ylabel("Cases")
+plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
 plt.title("LA County Total Confirmed Cases")
-plt.yscale('log')
+#plt.yscale('log')
 plt.show()

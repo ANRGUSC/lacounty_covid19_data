@@ -9,6 +9,7 @@ import re
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import matplotlib.ticker as mticker
 
 #setting up the file path
 script_dir = os.path.dirname(__file__)
@@ -100,6 +101,7 @@ def main(top_i_comm, type_plot,Today_date):
 		plt.legend()
 		plt.xlabel('Days since March 16, 2020')
 		plt.ylabel('Cases')
+		plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
 		plt.yscale('log')
 		plt.grid(True)
 		plt.title("Cases reported for top 6 communities")
@@ -110,5 +112,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'daily'
-	number_of_days_passed_from_16th = 16
+	number_of_days_passed_from_16th = 18
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)		

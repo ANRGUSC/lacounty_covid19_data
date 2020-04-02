@@ -99,18 +99,6 @@ def parse_list(list_object):
                         out[1]=str(out[1]).replace("*","")
                         if not out[1]:
                             out[1]="0"
-                        #out[1]=str(out[1]).replace("","0")
-                        #print(out[1])
-                        #out[1]=str(out[1]).replace("0 1","1")
-                        #out[1]=str(out[1]).replace("0 2","2")
-                        #out[1]=str(out[1]).replace("0 3","3")
-                        #out[1]=str(out[1]).replace("0 4","4")
-                        #out[1]=str(out[1]).replace("0 5","5")
-                        #out[1]=str(out[1]).replace("0 6","6")
-                        #out[1]=str(out[1]).replace("0 7","7")
-                        #out[1]=str(out[1]).replace("0 8","8")
-                        #out[1]=str(out[1]).replace("0 9","9")
-                        #out[1]=str(out[1].replace("<",""))
                         return out
 
 
@@ -146,8 +134,8 @@ def get_data(urlcomp):
     
 
 
-#execution starts here
-for press_release_id in range(2268,2292):
+#execution starts here - range entry for the following for loop denotes the press release identifiers
+for press_release_id in range(2268,2293):
     urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
     get_data(urlcomp)
 
