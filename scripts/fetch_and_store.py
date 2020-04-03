@@ -135,7 +135,7 @@ def get_data(urlcomp):
 
 
 #execution starts here - range entry for the following for loop denotes the press release identifiers
-for press_release_id in range(2268,2293):
+for press_release_id in range(2268,2295):
     urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
     get_data(urlcomp)
 
@@ -144,7 +144,7 @@ remove_element("Pasadena")
 remove_element("Los Angeles")
 
 get_count()
-#print(data_array[21])
+print(data_array[32])
 
 #counting case
 print(lacounty_total_case_count)

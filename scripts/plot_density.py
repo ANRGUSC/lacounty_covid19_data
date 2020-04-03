@@ -14,6 +14,10 @@ covid_data_file_path = os.path.join(script_dir, covid_data_path)
 script_dir = os.path.dirname(__file__)
 population_path = "../data/population.json"
 pop_data_file_path = os.path.join(script_dir, population_path)
+#setting up the out file path
+script_dir = os.path.dirname(__file__)
+out_path = "../plots/lacounty_case_density.png" 
+abs_out_file_path = os.path.join(script_dir, out_path)
 
 
 class community:
@@ -134,11 +138,13 @@ def main(top_i_comm, type_plot,Today_date):
 		plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
 		# plt.yscale('log')
 		plt.title('Case Density for Top 6 Communities')
-		plt.show()		
+		#plt.savefig('testfig.png',dpi=300, bbox_inches = "tight")
+		plt.savefig(abs_out_file_path,bbox_inches = "tight")
+		#plt.show()		
 		
 if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'cumulative'
-	number_of_days_passed_from_16th = 18
+	number_of_days_passed_from_16th = 19
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)		

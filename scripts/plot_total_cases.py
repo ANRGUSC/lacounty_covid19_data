@@ -8,6 +8,13 @@ import matplotlib.ticker as mticker
 script_dir = os.path.dirname(__file__)
 rel_path = "../data/lacounty_total_case_count.json"
 abs_file_path = os.path.join(script_dir, rel_path)
+#setting up the out file path
+script_dir = os.path.dirname(__file__)
+out_path_log = "../plots/lacounty_total_confirmed_cases_log.png" #this line creates a file with log scale in y axis
+abs_out_file_path_log_scale = os.path.join(script_dir, out_path_log)
+out_path = "../plots/lacounty_total_confirmed_cases.png" #this line creates a file with plot in a regular scale
+abs_out_file_path = os.path.join(script_dir, out_path)
+
 
 
 #this dictionaty will hold the parsed data in JSON format
@@ -35,5 +42,8 @@ plt.xlabel("Days since March 16, 2020")
 plt.ylabel("Cases")
 plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
 plt.title("LA County Total Confirmed Cases")
+plt.savefig(abs_out_file_path)
+plt.yscale('log')
+plt.savefig(abs_out_file_path_log_scale)
 #plt.yscale('log')
-plt.show()
+#plt.show()

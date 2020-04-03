@@ -11,10 +11,16 @@ import numpy as np
 import os
 import matplotlib.ticker as mticker
 
-#setting up the file path
+#setting up the input file path
 script_dir = os.path.dirname(__file__)
 rel_path = "../data/lacounty_covid.json"
 abs_file_path = os.path.join(script_dir, rel_path)
+#setting up the out file path
+script_dir = os.path.dirname(__file__)
+out_path_log = "../plots/daily_top6communities_log.png" #this line creates a file with log scale in y axis
+abs_out_file_path_log_scale = os.path.join(script_dir, out_path_log)
+out_path = "../plots/daily_top6communities.png" #this line creates a file with plot in a regular scale
+abs_out_file_path = os.path.join(script_dir, out_path)
 
 
 class community:
@@ -102,9 +108,12 @@ def main(top_i_comm, type_plot,Today_date):
 		plt.xlabel('Days since March 16, 2020')
 		plt.ylabel('Cases')
 		plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
-		plt.yscale('log')
+		#plt.yscale('log')
 		plt.grid(True)
 		plt.title("Cases reported for top 6 communities")
+		plt.savefig(abs_out_file_path)
+		plt.yscale('log')
+		plt.savefig(abs_out_file_path_log_scale)
 		plt.show()		
 	
 
@@ -112,5 +121,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'daily'
-	number_of_days_passed_from_16th = 18
+	number_of_days_passed_from_16th = 19
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)		
