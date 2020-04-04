@@ -157,6 +157,8 @@ remove_element("Los Angeles County (excl. LB and Pas)")
 remove_element("Los Angeles")
 remove_element("Male")
 remove_element("Female")
+remove_element("Unknown")
+remove_element("Under Investigation")
 for key,value in data_array.items():
     del(data_array[key][0])
     print(data_array[key][0])
