@@ -135,7 +135,7 @@ def get_data(urlcomp):
 
 
 #execution starts here - range entry for the following for loop denotes the press release identifiers
-for press_release_id in range(2268,2298):
+for press_release_id in range(2268,2299):
     #ignoring a duplicate spanish release
     if press_release_id != 2296:
         urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
