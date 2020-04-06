@@ -21,7 +21,7 @@ headers = {'accept': "application/json", 'accept': "text/csv"}
 #global variables for storing day and the data_array
 starting_date=16 #the data for Covid-19 is available from 16th of March
 data_array={} #this dictionary will store all the data
-case_count={} #dictionary hold the case count
+case_count={} #dictionary to hold the case count
 lacounty_total_case_count={} #count from the press release
 
 #write json to a file
@@ -135,7 +135,7 @@ def get_data(urlcomp):
 
 
 #execution starts here - range entry for the following for loop denotes the press release identifiers
-for press_release_id in range(2268,2299):
+for press_release_id in range(2268,2301):
     #ignoring a duplicate spanish release
     if press_release_id != 2296:
         urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
@@ -146,7 +146,7 @@ remove_element("Pasadena")
 remove_element("Los Angeles")
 
 get_count()
-print(data_array[32])
+
 
 #counting case
 print(lacounty_total_case_count)
@@ -166,7 +166,6 @@ for key,value in data_array.items():
         del(data_array[key][0])
         #print(data_array[key][0])
         
-#print(data_array)
 
 #writing dictionary to a file
 write_json_to_file("lacounty_covid.json",data_array)    
