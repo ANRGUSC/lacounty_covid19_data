@@ -41,8 +41,13 @@ abs_out_death_count_file = os.path.join(script_dir, out_path_dfile)
 headers = {'accept': "application/json", 'accept': "text/csv"}
 
 #global variables for storing day and the data_array
-starting_date=22 #the data for Covid-19 is available from 16th of March
+starting_date=38 #the data for Covid-19 is available from 16th of March
 data_array={} #this dictionary will store all the data
+
+#parsing json
+with open(abs_out_death_count_file, 'r') as jsonfile:
+    data_array=json.load(jsonfile)
+print(data_array.keys())
 
 
 #write json to a file
@@ -120,7 +125,7 @@ def parse_list(list_object):
             out=[]
             out.append("Deaths")
             out.append([int(s) for s in list_object.split() if s.isdigit()][0])   
-            #print(out)           
+            print(out)           
         out[0]=str(out[0]).replace("*","")
         out[0]=str(out[0]).replace("--","")
         out[1]=str(out[1]).replace("--","0")
@@ -159,18 +164,18 @@ def get_data(urlcomp):
             #print(ultag.text)
             for litag in ultag.find_all('li'):
                 parse_list(litag.text)                
-        starting_date=starting_date+1                
+        #starting_date=starting_date+1                
         return
     
 
 
 #execution starts here - range entry for the following for loop denotes the press release identifiers
-for press_release_id in range(2277,2301):
+#for press_release_id in range(2302,2303):
     #print(press_release_id)
     #ignoring a duplicate spanish release
-    if press_release_id != 2296:
-        urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
-    get_data(urlcomp)
+#    if press_release_id != 2296:
+#        urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
+#    get_data(urlcomp)
 
 print(data_array)
 
@@ -190,21 +195,21 @@ for key,value in data_array.items():
 y_array.sort()
 
 
-# plt.plot(x_array,y_array,marker='o', color='b')
-# plt.xlabel("Days since March 22, 2020")
-# plt.ylabel("Deaths")
-# plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
-# plt.title("LA County Total Deaths")
-# plt.savefig(abs_out_file_path)
-# plt.yscale('log')
-# plt.savefig(abs_out_file_path_log_scale)
+#plt.plot(x_array,y_array,marker='o', color='b')
+#plt.xlabel("Days since March 22, 2020")
+#plt.ylabel("Deaths")
+#plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
+#plt.title("LA County Total Deaths")
+#plt.savefig(abs_out_file_path)
+#plt.yscale('log')
+#plt.savefig(abs_out_file_path_log_scale)
 
 new_case_array=[]
 
 for i in range(0,len(y_array)-1):
     new_case_array.append(y_array[i+1]-y_array[i])
-print(y_array)
-print(new_case_array)
+#print(y_array)
+#print(new_case_array)
 del(x_array[-1])
 
 plt.plot(x_array,new_case_array,marker='o', color='b')
@@ -217,4 +222,4 @@ plt.yscale('log')
 plt.savefig(abs_out_file_newdeath_log__scale)
 
 # #writing dictionary to a file
-write_json_to_file(abs_out_death_count_file,data_array)    
+#write_json_to_file(abs_out_death_count_file,data_array)    
