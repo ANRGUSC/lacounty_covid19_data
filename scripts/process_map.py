@@ -287,6 +287,9 @@ def plot_caseden_popden(d):
     merged = pd.merge(caseden, popden, on='Region')
     colors = np.random.rand(len(merged))
 
+    maxden = merged.loc[merged['Density'].idxmax()]
+
+
     top6 = ['Melrose','Hollywood','Glendale','Santa Clarita', 'North Hollywood','Torrance']
     top6_df = merged[merged['Region'].isin(top6)] #Melrose not have density
     top6_df= top6_df.reset_index(drop=True)
@@ -300,9 +303,10 @@ def plot_caseden_popden(d):
     ax.set_yscale('log')
     ax.scatter(merged['Population Density'],merged['Density'], c='blue', alpha=0.5)
     ax.scatter(top6_df['Population Density'],top6_df['Density'], c='red', alpha=0.5)
-
+    ax.scatter(maxden['Population Density'],maxden['Density'], c='green', alpha=0.5)
     for i in range(0,5):
         ax.annotate(txt.loc[i].values[0],(z.loc[i].values[0],y.loc[i].values[0]))
+    ax.annotate(maxden['Region'],(maxden['Population Density'],maxden['Density']))
     t = 'Case Density vs Population Density on day %s'%(d)
     plt.title(t)
     plt.xlabel('Population Density')
@@ -314,9 +318,12 @@ def plot_caseden_popden(d):
     ax1.set_yscale('log')
     ax1.set_xscale('log')
     ax1.scatter(merged['Population Density'],merged['Density'], c='blue', alpha=0.5)
-    ax1.scatter(top6_df['Population Density'],top6_df['Density'], c='red', alpha=0.5)  
+    ax1.scatter(top6_df['Population Density'],top6_df['Density'], c='red', alpha=0.5)
+    ax1.scatter(maxden['Population Density'],maxden['Density'], c='green', alpha=0.5)
     for i in range(0,5):
         ax1.annotate(txt.loc[i].values[0],(z.loc[i].values[0],y.loc[i].values[0]))
+    ax1.annotate(maxden['Region'],(maxden['Population Density'],maxden['Density']))
+
     t = 'Case Density vs Population Density on day %s'%(d)
     plt.title(t)
     plt.xlabel('log(population density)')
