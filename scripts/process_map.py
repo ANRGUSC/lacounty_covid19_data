@@ -287,17 +287,40 @@ def plot_caseden_popden(d):
     merged = pd.merge(caseden, popden, on='Region')
     colors = np.random.rand(len(merged))
 
-
-    fig = plt.figure()
-    ax = plt.gca()
+    top6 = ['Melrose','Hollywood','Glendale','Santa Clarita', 'North Hollywood','Torrance']
+    top6_df = merged[merged['Region'].isin(top6)] #Melrose not have density
+    top6_df= top6_df.reset_index(drop=True)
+    print(top6_df)
+    txt = top6_df.loc[:,['Region']]
+    z = top6_df.loc[:,['Population Density']]
+    y = top6_df.loc[:,['Density']]
+    
     fig = plt.figure()
     ax = plt.gca()
     ax.set_yscale('log')
-    ax.scatter(merged['Population Density'],merged['Density'], c='blue', alpha=0.5)    
+    ax.scatter(merged['Population Density'],merged['Density'], c='blue', alpha=0.5)
+    ax.scatter(top6_df['Population Density'],top6_df['Density'], c='red', alpha=0.5)
+
+    for i in range(0,5):
+        ax.annotate(txt.loc[i].values[0],(z.loc[i].values[0],y.loc[i].values[0]))
     t = 'Case Density vs Population Density on day %s'%(d)
     plt.title(t)
     plt.xlabel('Population Density')
-    plt.ylabel('Case Density')
+    plt.ylabel('log(case density)')
+    plt.show()
+
+    fig1 = plt.figure()
+    ax1 = plt.gca()
+    ax1.set_yscale('log')
+    ax1.set_xscale('log')
+    ax1.scatter(merged['Population Density'],merged['Density'], c='blue', alpha=0.5)
+    ax1.scatter(top6_df['Population Density'],top6_df['Density'], c='red', alpha=0.5)  
+    for i in range(0,5):
+        ax1.annotate(txt.loc[i].values[0],(z.loc[i].values[0],y.loc[i].values[0]))
+    t = 'Case Density vs Population Density on day %s'%(d)
+    plt.title(t)
+    plt.xlabel('log(population density)')
+    plt.ylabel('log(case density)')
     plt.show()
 
 
@@ -318,4 +341,4 @@ if __name__ == "__main__":
     # generate_heatmap()
 
     # Plots
-    # plot_caseden_popden('04-1-2020')
+    plot_caseden_popden('04-1-2020')
