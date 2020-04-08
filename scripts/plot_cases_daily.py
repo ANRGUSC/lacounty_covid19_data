@@ -71,6 +71,7 @@ def main(top_i_comm, type_plot,Today_date):
         #make sure the json file is in the right directory
 	with open(abs_file_path) as json_file:
 		data = json.load(json_file)
+		print(data.keys())
 		for day in sorted([int(k) for k in data.keys()]):
 			for i in range(len(data[str(day)])):
 				actual_name_of_community = 	data[str(day)][i][0].strip()
@@ -121,5 +122,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'daily'
-	number_of_days_passed_from_16th = 22
+	number_of_days_passed_from_16th = 24
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)		
