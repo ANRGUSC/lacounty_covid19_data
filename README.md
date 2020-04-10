@@ -2,6 +2,8 @@
 
 This repository contains code (in the form of Python scripts) to obtain and visualize data about confirmed positive cases of COVID-19 in the cities and communities within LA County. It also includes sample data obtained from these scripts as well as sample plots.   
 
+We also post the latest plots every day on the following website: [CoVID-19 Plots for LA County](http://anrg.usc.edu/www/covid19.html).
+
 ## Data Source
 The Los Angeles Department of Public Health do a press release every day, which contains information about the 
 number of CoVID-19 cases in Los Angeles County and its neoghbourhood. We provide the list of press releases that 
@@ -27,10 +29,10 @@ purposes, we provide another script (visualization_COVID.py). These scripts have
 from starting 16th of March to 27th of March. 
 
 ## Data
-For those who are interested only in analysing the data, we provide the data in the JSON format. In the JSON, the keys represent the "day" in March and the values denote the cases in each community in LA county. 
+For those who are interested only in analysing the data, we provide the data in the CSV and JSON formats. In the JSON, the keys represent the "day" in March and the values denote the cases in each community in LA county. 
 
 ## Plots
-We have generated plots using the data retrieved from LA county press releases. These plots show the time-series data for confirmed COVID-19 positive cases (daily and cumulative) in the communities and cities within LA County that are showing the most number of cases.
+We have generated plots using the data retrieved from LA county press releases. These plots show the time-series data for confirmed COVID-19 positive cases (daily) and fatalities in the communities and cities within LA County that are showing the most number of cases.
 
 ## Questions
 For any questions about this data set or tools, please contact Dr. Gowri Sankar Ramachandran (gsramach@usc.edu) or Prof. Bhaskar Krishnamachari (bkrishna@usc.edu). 
