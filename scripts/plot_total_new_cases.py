@@ -29,7 +29,7 @@ y_array=[]
 i=0;
 for key,value in reader.items():
     x_array.append(int(i))
-    y_array.append(int(value[1]))
+    y_array.append(int(value[1].replace(",","")))
     i=i+1
 
 print(x_array)

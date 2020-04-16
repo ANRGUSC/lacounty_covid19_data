@@ -41,13 +41,14 @@ abs_out_death_count_file = os.path.join(script_dir, out_path_dfile)
 headers = {'accept': "application/json", 'accept': "text/csv"}
 
 #global variables for storing day and the data_array
-starting_date=38 #the data for Covid-19 is available from 16th of March
+starting_date=46 #the data for Covid-19 is available from 16th of March
 data_array={} #this dictionary will store all the data
 
 #parsing json
 with open(abs_out_death_count_file, 'r') as jsonfile:
     data_array=json.load(jsonfile)
 print(data_array.keys())
+#del(data_array['38'])
 
 
 #write json to a file
@@ -141,6 +142,7 @@ def parse_list(list_object):
             #filtering death based on the case number value - we assume that 
             #the death numbers below 350. The script has to be updated with a 
             #better parsing when the total death count reaches 250 or so.
+            out[1]=out[1].replace(",","")
             if int(out[1]) < 350:
                 out[0] = "Deaths"
                 data_array[starting_date].append(out)
@@ -153,7 +155,7 @@ def parse_list(list_object):
 def get_data(urlcomp):
     global starting_date,data_array
     rcomp = requests.get(urlcomp, headers=headers)
-    if "Please see the locations were cases have occurred:" in rcomp.text:
+    if "Please see the locations where cases have occurred:" in rcomp.text:
         print("Case numbers found")
         #print(rcomp.text)
         data_array[starting_date]=[]
@@ -170,14 +172,16 @@ def get_data(urlcomp):
 
 
 #execution starts here - range entry for the following for loop denotes the press release identifiers
-#for press_release_id in range(2302,2303):
-    #print(press_release_id)
-    #ignoring a duplicate spanish release
-#    if press_release_id != 2296:
-#        urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
-#    get_data(urlcomp)
+# for press_release_id in range(2321,2322):
+#     print(press_release_id)
+#     #ignoring a duplicate spanish release
+#     if press_release_id != 2296:
+#         urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
+#     get_data(urlcomp)
 
-print(data_array)
+# print(data_array)
+
+
 
 x_array=[]
 y_array=[]
@@ -195,14 +199,14 @@ for key,value in data_array.items():
 y_array.sort()
 
 
-#plt.plot(x_array,y_array,marker='o', color='b')
-#plt.xlabel("Days since March 22, 2020")
-#plt.ylabel("Deaths")
-#plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
-#plt.title("LA County Total Deaths")
-#plt.savefig(abs_out_file_path)
-#plt.yscale('log')
-#plt.savefig(abs_out_file_path_log_scale)
+# plt.plot(x_array,y_array,marker='o', color='b')
+# plt.xlabel("Days since March 22, 2020")
+# plt.ylabel("Deaths")
+# plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
+# plt.title("LA County Total Deaths")
+# plt.savefig(abs_out_file_path)
+# plt.yscale('log')
+# plt.savefig(abs_out_file_path_log_scale)
 
 new_case_array=[]
 
@@ -221,5 +225,5 @@ plt.savefig(abs_out_file_newdeath_path)
 plt.yscale('log')
 plt.savefig(abs_out_file_newdeath_log__scale)
 
-# #writing dictionary to a file
+# # #writing dictionary to a file
 #write_json_to_file(abs_out_death_count_file,data_array)    
