@@ -6,7 +6,7 @@ We also post the latest plots every day on the following website: [CoVID-19 Plot
 
 ## Data Source
 The Los Angeles Department of Public Health do a press release every day, which contains information about the 
-number of CoVID-19 cases in Los Angeles County and its neoghbourhood. We provide the list of press releases that 
+number of CoVID-19 cases in Los Angeles County and its neoghbourhood. We provide a pointer to some of the press releases that 
 were used for scraping the data below:
 * [March 16](http://www.publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2268)
 * [March 17](http://www.publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2271)
