@@ -73,7 +73,9 @@ def get_population_vec(list_communities):
 		
 		output_list = []
 		for communiuty_obj in list_communities:
+			print(communiuty_obj.actual_name)
 			temp = [val for key,val in data.items() if communiuty_obj.actual_name == key.strip().split('--')[0]]
+			print(temp)
 			if temp :
 		 		output_list.append(int(temp.pop().strip()))
 		if len(output_list) == len(list_communities):
@@ -96,7 +98,7 @@ def main(top_i_comm, type_plot,Today_date):
 					actual_name_of_community = 	data[str(day)][i][0].strip()
 					name_of_community = data[str(day)][i][0].strip().lower().replace(' ','')
 					# cleaning city names, removing following prefixes
-					prefixex = ['cityof','losangeles-','unincorporated-']
+					prefixex = ['cityof','losangeles-','unincorporated-','Los Angeles-','Los Angeles -']
 					for word in prefixex:
 						name_of_community = name_of_community.replace(word,'') 
 					# cleaning confirmed number, e.g. <1 will be 1
@@ -146,5 +148,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'cumulative'
-	number_of_days_passed_from_16th = 38
+	number_of_days_passed_from_16th = 39
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)		
