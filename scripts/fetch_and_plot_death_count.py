@@ -41,7 +41,7 @@ abs_out_death_count_file = os.path.join(script_dir, out_path_dfile)
 headers = {'accept': "application/json", 'accept': "text/csv"}
 
 #global variables for storing day and the data_array
-starting_date=46 #the data for Covid-19 is available from 16th of March
+starting_date=59 #the data for Covid-19 is available from 16th of March
 data_array={} #this dictionary will store all the data
 
 #parsing json
@@ -155,7 +155,7 @@ def parse_list(list_object):
 def get_data(urlcomp):
     global starting_date,data_array
     rcomp = requests.get(urlcomp, headers=headers)
-    if "Please see the locations where cases have occurred:" in rcomp.text:
+    if "Please see the locations where cases have occurred:" in rcomp.text or "Please see additional information below:" in rcomp.text:
         print("Case numbers found")
         #print(rcomp.text)
         data_array[starting_date]=[]
@@ -172,17 +172,18 @@ def get_data(urlcomp):
 
 
 #execution starts here - range entry for the following for loop denotes the press release identifiers
-# for press_release_id in range(2321,2322):
-#     print(press_release_id)
-#     #ignoring a duplicate spanish release
-#     if press_release_id != 2296:
-#         urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
-#     get_data(urlcomp)
+for press_release_id in range(2347,2348):
+    print(press_release_id)
+    #ignoring a duplicate spanish release
+    if press_release_id != 2296:
+        urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
+    get_data(urlcomp)
 
 # print(data_array)
 
 
-
+#plotting graphs
+#first plot: create a plot for total case count in both linear and log scale
 x_array=[]
 y_array=[]
 i=1;
@@ -199,15 +200,18 @@ for key,value in data_array.items():
 y_array.sort()
 
 
-# plt.plot(x_array,y_array,marker='o', color='b')
-# plt.xlabel("Days since March 22, 2020")
-# plt.ylabel("Deaths")
-# plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
-# plt.title("LA County Total Deaths")
-# plt.savefig(abs_out_file_path)
-# plt.yscale('log')
-# plt.savefig(abs_out_file_path_log_scale)
+plt.plot(x_array,y_array,marker='o', color='b')
+plt.xlabel("Days since March 22, 2020")
+plt.ylabel("Deaths")
+plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
+plt.title("LA County Total Deaths")
+plt.savefig(abs_out_file_path)
+plt.yscale('log')
+plt.savefig(abs_out_file_path_log_scale)
+plt.close()
 
+
+#create a plot for total new case in both linear and log scale
 new_case_array=[]
 
 for i in range(0,len(y_array)-1):
@@ -224,6 +228,7 @@ plt.title("LA County Total New Deaths")
 plt.savefig(abs_out_file_newdeath_path)
 plt.yscale('log')
 plt.savefig(abs_out_file_newdeath_log__scale)
+plt.close()
 
 # # #writing dictionary to a file
-#write_json_to_file(abs_out_death_count_file,data_array)    
+write_json_to_file(abs_out_death_count_file,data_array)    
