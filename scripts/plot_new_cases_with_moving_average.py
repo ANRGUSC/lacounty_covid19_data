@@ -57,7 +57,7 @@ del(x_array[-1])
 
 #creating an array of 7-day moving averages
 x_av = movingaverage(new_case_array, 7)
-#print(x_av)
+print(x_av)
 
 #plotting data in both linear and log scales
 plt.plot(x_array,x_av,marker='o', color='b')
