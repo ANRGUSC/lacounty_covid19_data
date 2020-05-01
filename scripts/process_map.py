@@ -79,9 +79,15 @@ def process_covid():
     for k,v in covid.items():
         if int(k)<32:
             ts = '03-'+k+'-2020'
-        else:
+            print(ts)
+        elif int(k) < 62:
             d = int(k)-31
             ts = '04-'+str(d)+'-2020'
+            print(ts)
+        else:
+            d = int(k)-63
+            ts = '05'+str(d)+'-2020'
+            print(ts)     
         for value in v:
             tmp = value[0].strip()
             try:
@@ -246,4 +252,4 @@ if __name__ == "__main__":
     # process_covid()
     # process_density()
     # retrieve_covid_date()    
-    # generate_heatmap()
+    generate_heatmap()

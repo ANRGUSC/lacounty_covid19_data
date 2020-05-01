@@ -14,6 +14,7 @@ from lxml import html
 from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+import time
 
 import os
 
@@ -41,7 +42,7 @@ abs_out_death_count_file = os.path.join(script_dir, out_path_dfile)
 headers = {'accept': "application/json", 'accept': "text/csv"}
 
 #global variables for storing day and the data_array
-starting_date=60 #the data for Covid-19 is available from 16th of March
+starting_date=61 #the data for Covid-19 is available from 16th of March
 data_array={} #this dictionary will store all the data
 
 #parsing json
@@ -172,12 +173,12 @@ def get_data(urlcomp):
 
 
 #execution starts here - range entry for the following for loop denotes the press release identifiers
-for press_release_id in range(2349,2350):
-    print(press_release_id)
-    #ignoring a duplicate spanish release
-    if press_release_id != 2296:
-        urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
-    get_data(urlcomp)
+# for press_release_id in range(2353,2354):
+#     print(press_release_id)
+#     #ignoring a duplicate spanish release
+#     if press_release_id != 2296:
+#         urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
+#     get_data(urlcomp)
 
 # print(data_array)
 
@@ -208,6 +209,7 @@ plt.title("LA County Total Deaths")
 plt.savefig(abs_out_file_path)
 plt.yscale('log')
 plt.savefig(abs_out_file_path_log_scale)
+time.sleep(5)
 plt.close()
 
 
@@ -228,6 +230,7 @@ plt.title("LA County Total New Deaths")
 plt.savefig(abs_out_file_newdeath_path)
 plt.yscale('log')
 plt.savefig(abs_out_file_newdeath_log__scale)
+time.sleep(5)
 plt.close()
 
 # # #writing dictionary to a file

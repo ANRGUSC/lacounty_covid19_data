@@ -33,7 +33,7 @@ def create_dataframe_for_R(new_case_array):
 
 def plot_rt(result, ax,state_name):
     
-    ax.set_title(f"{state_name}")
+    ax.set_title(state_name)
     
     # Colors
     ABOVE  = [1,0,0]   # red
@@ -132,23 +132,23 @@ print("val")
 print(result)
 
 max_value = result['Cases'].max()
-ax.set_title(f'{state_name}')
+ax.set_title(state_name)
 # FIX HERE -------- for fittting the y axis to the largest value in y
 ax.set_ylim(0.0,max_value+10.00)
 # --------------------------------------------------------------------
 ax.xaxis.set_major_locator(mdates.WeekdayLocator())
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
-plt.show()
+#plt.show()
 
 
 
 # #plotting data in both linear and log scales
 # plt.plot(x_array,x_av,marker='o', color='b')
 # plt.xlabel("Days since March 23, 2020")
-# plt.ylabel("Deaths")
+plt.ylabel("Deaths")
 # plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(2))
 # plt.title("LA County Total New Deaths (7-day moving average)")
 # #plt.show()
-# plt.savefig(abs_out_file_path_linear)
+plt.savefig(abs_out_file_path_linear)
 # plt.yscale('log')
 # plt.savefig(abs_out_file_path_log)

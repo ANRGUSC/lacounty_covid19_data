@@ -27,7 +27,7 @@ def create_dataframe_for_R(new_case_array):
 
 def plot_rt(result, ax,state_name):
     
-    ax.set_title(f"{state_name}")
+    ax.set_title(state_name)
     
     # Colors
     ABOVE  = [1,0,0]   # red
@@ -115,13 +115,17 @@ print("val")
 print(result)
 
 max_value = result['Cases'].max()
-ax.set_title(f'{state_name}')
+ax.set_title(state_name)
 # FIX HERE -------- for fittting the y axis to the largest value in y
 ax.set_ylim(0.0,(max_value//100)*100.00+100.00)
 # --------------------------------------------------------------------
 ax.xaxis.set_major_locator(mdates.WeekdayLocator())
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
-plt.show()
+#plt.show()
+plt.ylabel("Cases")
+plt.savefig(abs_out_file_path)
+#ax.set_yscale('log')
+#plt.savefig(abs_out_file_path_log_scale)
 
 
 
