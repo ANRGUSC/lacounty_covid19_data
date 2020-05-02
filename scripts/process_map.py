@@ -85,8 +85,10 @@ def process_covid():
             ts = '04-'+str(d)+'-2020'
             print(ts)
         else:
-            d = int(k)-63
-            ts = '05'+str(d)+'-2020'
+            print(k)
+            d = int(k)-61
+            print(d)
+            ts = '05-'+str(d)+'-2020'
             print(ts)     
         for value in v:
             tmp = value[0].strip()
