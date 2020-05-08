@@ -8,7 +8,7 @@ import matplotlib.ticker as mticker
 
 #setting up the file path
 script_dir = os.path.dirname(__file__)
-covid_data_path = "../data/lacounty_covid.json"
+covid_data_path = "../data/lacounty_covid_new_data.json"
 covid_data_file_path = os.path.join(script_dir, covid_data_path)
 #setting up the file path
 script_dir = os.path.dirname(__file__)
@@ -148,5 +148,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'cumulative'
-	number_of_days_passed_from_16th = 52
+	number_of_days_passed_from_16th = 54
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)		
