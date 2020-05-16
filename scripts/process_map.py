@@ -17,7 +17,7 @@ import requests
 
 
 API_KEY = '576004cefa1b43648fd6cd7059ae8196' # get api key from:  https://opencagedata.com
-covid_json = 'lacounty_covid.json'
+covid_json = 'lacounty_covid_new_data.json'
 population_json = 'population.json'
 
 
@@ -236,6 +236,7 @@ def generate_heatmap_bydate(d):
     # plt.show()
     outfile = '../plots/map/%s.png'%(d)
     plt.savefig(outfile,bbox_inches='tight')
+    plt.close()
 
 def generate_heatmap():
     os.chdir('../data/')
@@ -250,8 +251,8 @@ if __name__ == "__main__":
     # process_population()
 
     # Run daily
-    # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
-    # process_covid()
-    # process_density()
-    # retrieve_covid_date()    
+    #retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
+    #process_covid()
+    #process_density()
+    #retrieve_covid_date()    
     generate_heatmap()
