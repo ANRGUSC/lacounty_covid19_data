@@ -17,6 +17,7 @@ import requests
 from bs4 import BeautifulSoup
 import numpy as np
 import seaborn as sns
+from matplotlib.colors import ListedColormap
 
 
 
@@ -219,7 +220,7 @@ def generate_heatmap_color_bydate(d):
     filename = 'dailycases/%s.csv'%(d)
     data = pd.read_csv(filename,header=0)
 
-    colors = ['Greens','Blues','Purples','Oranges']
+    colors = ['Green','Yellow','Orange','Red']
     step = (max_den - min_den)/len(colors)
     bins = [0,min_den+step,min_den+2*step,min_den+3*step,max_den]
     labels=['Cat{}'.format(x) for x in range(1, len(bins))]
@@ -230,7 +231,9 @@ def generate_heatmap_color_bydate(d):
     merged = merged.reset_index()
     # merged['cat'] = merged['cat'].cat.add_categories('No data')
     # merged['cat'].fillna('No data', inplace =True) 
-    # print(merged)
+    
+    
+    print(merged)
     merged['Time Stamp'] = merged['Time Stamp'].fillna(0)
     merged['Longitude'] = merged['Longitude'].fillna(0)
     merged['Latitude'] = merged['Latitude'].fillna(0)
@@ -238,9 +241,13 @@ def generate_heatmap_color_bydate(d):
     print(merged)
 
 
+    cmap = ListedColormap(colors, name='allred')
+
     fig, ax = plt.subplots(1, figsize=(14,8))
-    merged.plot(column='cat', categorical=True, cmap='Oranges', linewidth=.6, edgecolor='0.2',
+    merged.plot(column='cat', categorical=True, cmap=cmap, linewidth=.6, edgecolor='0.2',
              legend=True, legend_kwds={'bbox_to_anchor':(1.3, 0.7),'fontsize':16,'frameon':True}, ax=ax, missing_kwds={'color': 'lightgrey'})
+    # merged.plot(column='cat', categorical=True, cmap='Oranges', linewidth=.6, edgecolor='0.2',
+    #          legend=True, legend_kwds={'bbox_to_anchor':(1.3, 0.7),'fontsize':16,'frameon':True}, ax=ax)
 
     title = 'Heat Map of Covid-19, Los Angeles County (%s)' %(d)
     ax.set_title(title,fontsize=20)
