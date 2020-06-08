@@ -498,7 +498,6 @@ if __name__ == "__main__":
     # retrieve_risk_date()    
 
     generate_heatmap_color()
-    # generate_heatmap_color_bydate('04-27-2020')
 
     # Plots
     # plot_caseden_popden('04-1-2020')
