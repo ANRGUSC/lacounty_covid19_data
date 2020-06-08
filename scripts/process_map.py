@@ -245,7 +245,7 @@ def generate_heatmap_color_bydate(d):
 
     fig, ax = plt.subplots(1, figsize=(14,8))
     merged.plot(column='cat', categorical=True, cmap=cmap, linewidth=.6, edgecolor='0.2',
-             legend=True, legend_kwds={'bbox_to_anchor':(1.3, 0.7),'fontsize':16,'frameon':True}, ax=ax, missing_kwds={'color': 'lightgrey'})
+             legend=True, legend_kwds={'bbox_to_anchor':(1.3, 0.7),'fontsize':16,'frameon':True}, ax=ax, missing_kwds={'color': 'white'})
     # merged.plot(column='cat', categorical=True, cmap='Oranges', linewidth=.6, edgecolor='0.2',
     #          legend=True, legend_kwds={'bbox_to_anchor':(1.3, 0.7),'fontsize':16,'frameon':True}, ax=ax)
 
