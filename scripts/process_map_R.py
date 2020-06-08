@@ -257,5 +257,5 @@ if __name__ == "__main__":
     #retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     #process_covid()
     #process_density()
-    #retrieve_covid_date()    
-    generate_heatmap()
+    retrieve_covid_date()    
+    #generate_heatmap()

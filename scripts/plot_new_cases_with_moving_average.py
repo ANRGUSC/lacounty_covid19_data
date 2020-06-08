@@ -49,7 +49,8 @@ def plot_rt(result, ax,state_name):
     index = result['Cases'].index.get_level_values('Time Stamp')
     values = result['Cases'].values
     
-    max_value = values.max()
+    #max_value = values.max()
+    max_value = (values[~np.isnan(values)]).max()
     print("maxxx",max_value)
     # Plot dots and line
     ax.plot(index, values, c='k', zorder=1, alpha=.25)
@@ -77,6 +78,8 @@ def plot_rt(result, ax,state_name):
 def movingaverage(interval, window_size):
     window = numpy.ones(int(window_size))/float(window_size)
     return numpy.convolve(interval, window, 'same')
+
+
 
 
 #setting up the input file path
@@ -120,10 +123,14 @@ for i in range(0,len(y_array)-1):
 del(x_array[-1])
 
 #creating an array of 7-day moving averages
-x_av = movingaverage(new_case_array, 7)
-print(x_av)
+# x_av = movingaverage(new_case_array, 7)
+# print(x_av)
 
-result = create_dataframe_for_R(x_av)
+# result = create_dataframe_for_R(x_av)
+processed_df = create_dataframe_for_R(new_case_array)
+result=processed_df.rolling(7).mean()
+print(result)
+
 fig, ax = plt.subplots(figsize=(600/72,400/72))
 
 state_name = "LA County Total New Cases (7-day moving average)"
