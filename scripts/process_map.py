@@ -18,6 +18,7 @@ from bs4 import BeautifulSoup
 import numpy as np
 import seaborn as sns
 from matplotlib.colors import ListedColormap
+import matplotlib.patches as mpatches
 
 
 
@@ -208,21 +209,106 @@ def retrieve_covid_date():
         sub.index.name = 'ID'
         sub.to_csv (file_name, index = True, header=True)  
 
+def retrieve_risk_date():
+    os.chdir('../data/')
+    covid = pd.read_csv('Covid-19-R-cleaned.csv',header=0)
+    denfold = 'dailycasesR'
+    if not os.path.exists(denfold):
+        os.makedirs(denfold)
+    date_list = covid['Time Stamp'].unique()
+    
+    for d in date_list:
+        idx = covid.index[covid['Time Stamp'] == d]
+        sub = covid.iloc[idx,:]
+        sub = sub.reset_index(drop=True)
+        file_name = '%s/%s.csv'%(denfold,d)
+        sub.index.name = 'ID'
+        sub.to_csv (file_name, index = True, header=True)  
+
+    
 def generate_heatmap_color_bydate(d):
     mapfold='../plots/map'
     if not os.path.exists(mapfold):
         os.makedirs(mapfold)
     os.chdir('../data/')
-    covid = pd.read_csv('Covid-19-density.csv',header=0)
+    covid = pd.read_csv('Covid-19-R-cleaned.csv',header=0)
+    
+    regions = gpd.read_file('shapefile/la.shp')
+    filename = 'dailycasesR/%s.csv'%(d)
+    data = pd.read_csv(filename,header=0)
+
+
+    colors = ['Green','Yellow','Orange','Red','White']
+    labels = ['Safe','Low-risk','Medium-risk','High-risk','No data']
+    data['cat'] = 'No data'
+    data['color'] = 'White'
+    print(type(data['Risk-Level'].iloc[0]))
+    for i in range(0,4):
+        data.loc[data['Risk-Level'] ==i, 'cat'] = labels[i]
+        data.loc[data['Risk-Level'] ==i, 'color'] = colors[i]
+
+
+    merged = regions.set_index('name').join(data.set_index('Region'))
+    merged = merged.reset_index()
+    # merged['cat'] = merged['cat'].cat.add_categories('No data')
+    # merged['cat'].fillna('No data', inplace =True) 
+    print(merged)
+    
+    merged['Time Stamp'] = merged['Time Stamp'].fillna(0)
+    merged['Longitude'] = merged['Longitude'].fillna(0)
+    merged['Latitude'] = merged['Latitude'].fillna(0)
+    merged['Risk-Score'] = merged['Risk-Score'].fillna(0)
+    merged['Risk-Level'] = merged['Risk-Level'].fillna('-1')
+    merged['cat'] = merged['cat'].fillna('No data')
+    merged['color'] = merged['color'].fillna('White')
+
+    print(merged)
+
+
+    # cmap = ListedColormap(merged['color'].to_list(), name='allwhite')
+    color_list = merged['color'].to_list()
+    
+    colors_patch = []
+    for i in range(0,5):
+        print(colors[i])
+        print(labels[i])
+        colors_patch.append(mpatches.Patch(color=colors[i], label=labels[i],edgecolor="black"))
+    
+
+    fig, ax = plt.subplots(1, figsize=(14,8))
+    # merged.plot(column='cat', categorical=True, cmap=cmap, linewidth=.6, edgecolor='0.2',
+    #          legend=True, legend_kwds={'bbox_to_anchor':(1.3, 0.7),'fontsize':16,'frameon':True}, ax=ax, missing_kwds={'color': 'white'})
+    merged.plot(column='cat', categorical=True, color = color_list,linewidth=.6, edgecolor='0.2',
+             legend=True, legend_kwds={'bbox_to_anchor':(1.3, 0.7),'fontsize':16,'frameon':True}, ax=ax)
+
+
+    title = 'Heat Map of Covid-19 Risk, Los Angeles County (%s)' %(d)
+    ax.set_title(title,fontsize=20)
+    plt.tight_layout()
+    ax.axis('off')
+    plt.legend(handles=colors_patch,loc = "lower right",facecolor="lightblue")
+    # plt.show()
+    outfile = '../plots/map/risk_%s.png'%(d)
+    plt.savefig(outfile,bbox_inches='tight')
+
+def generate_heatmap_color_bydate2(d):
+    mapfold='../plots/map'
+    if not os.path.exists(mapfold):
+        os.makedirs(mapfold)
+    os.chdir('../data/')
+    covid = pd.read_csv('Covid-19-R-cleaned.csv',header=0)
+
     max_den = covid['Density'].max()
     min_den = covid['Density'].min()
+    step = (max_den - min_den)/len(colors)
+    bins = [0,min_den+step,min_den+2*step,min_den+3*step,max_den]
+
     regions = gpd.read_file('shapefile/la.shp')
     filename = 'dailycases/%s.csv'%(d)
     data = pd.read_csv(filename,header=0)
 
     colors = ['Green','Yellow','Orange','Red']
-    step = (max_den - min_den)/len(colors)
-    bins = [0,min_den+step,min_den+2*step,min_den+3*step,max_den]
+    
     labels=['Cat{}'.format(x) for x in range(1, len(bins))]
     data['cat'] = pd.cut(x=data['Density'], bins=bins, labels=labels, right = True, include_lowest= True)
 
@@ -257,98 +343,12 @@ def generate_heatmap_color_bydate(d):
     outfile = '../plots/map/%s.png'%(d)
     plt.savefig(outfile,bbox_inches='tight')
 
-    # Loop through each attribute type and plot it using the colors assigned in the dictionary
-    # roadPalette = {'Cat1': 'green',
-    #            'Cat2': 'blue',
-    #            'Cat3': 'purple',
-    #            'Cat4': 'orange',
-    #            'No data' : 'grey'}
-    # for ctype, data in merged.groupby('cat'):
 
-    #     # Define the color for each group using the dictionary
-    #     color = roadPalette[ctype]
-
-    #     # Plot each group using the color defined above
-    #     data.plot(color=color,
-    #               ax=ax,
-    #               label=ctype)
-
-    # ax.legend(bbox_to_anchor=(2, 0.7), prop={'size': 12})
-    # title = 'Heat Map of Covid-19, Los Angeles County (%s)' %(d)
-    # ax.set(title=title)
-    # ax.set_axis_off()
-
-
-# def generate_heatmap_color_bydate2(d):
-    
-#     mapfold='../plots/map'
-#     if not os.path.exists(mapfold):
-#         os.makedirs(mapfold)
-#     os.chdir('../data/')
-#     covid = pd.read_csv('Covid-19-density.csv',header=0)
-#     max_den = covid['Density'].max()
-#     min_den = covid['Density'].min()
-#     regions = gpd.read_file('shapefile/la.shp')
-#     filename = 'dailycases/%s.csv'%(d)
-#     data = pd.read_csv(filename,header=0)
-
-
-#     colors = ['Greens','Blues','Purples','Oranges']
-#     step = (max_den - min_den)/len(colors)
-#     bins = [0,min_den+step,min_den+2*step,min_den+3*step,max_den]
-#     labels=['Cat{}'.format(x) for x in range(1, len(bins))]
-#     data['cat'] = pd.cut(x=data['Density'], bins=bins, labels=labels, right = True, include_lowest= True)
-    
-#     fig, ax = plt.subplots(1, figsize=(40, 20))
-#     ax.axis('off')
-#     title = 'Heat Map of Covid-19, Los Angeles County (%s)' %(d)
-#     ax.set_title(title, fontdict={'fontsize': '20', 'fontweight' : '3'})
-    
-    # for idx,label in enumerate(labels):
-    #     print('Retrieve subset of data')
-    #     print(label)
-    #     merged = gpd.GeoDataFrame()
-    #     #['Time Stamp','Region', 'Latitude', 'Longitude','Density']
-    #     subdata = data.loc[data['cat']==label,['Time Stamp','Region', 'Latitude', 'Longitude','Density','cat']]
-    #     merged = regions.set_index('name').join(subdata.set_index('Region'))
-    #     # print(merged)
-    #     # merged['cat'] = merged['cat'].cat.add_categories('Unknown')
-    #     # merged['cat'].fillna('Unknown', inplace =True)
-    #     # print(merged)
-    #     merged = merged.reset_index()
-    #     # merged = merged.fillna(0)
-    #     print(merged)
-
-    #     merged.plot(column='cat', cmap=colors[idx])
-        
-        
-    #     # vmin = subdata['Density'].min()
-    #     # vmax = subdata['Density'].max()
-    #     # vmin = bins[idx]
-    #     # vmax = bins[idx+1]
-    #     # sm = plt.cm.ScalarMappable(cmap=colors[idx], norm=plt.Normalize(vmin=vmin, vmax=vmax))
-    #     # sm._A = []
-    #     # cbar = fig.colorbar(sm,shrink=0.75)
-
-    #     # cbar.ax.tick_params(labelsize=10) 
-
-    #     # # normalize = matplotlib.colors.Normalize(vmin=0, vmax=max_den)
-
-    #     # normalize = matplotlib.colors.Normalize(vmin=0, vmax=vmax)
-    #     # #merged.plot(cmap=colors[0],norm=normalize, linewidth=0.8, ax=ax,edgecolor='0.8', figsize=(40,20))
-    #     # # merged.plot(facecolor="none", edgecolor='black',norm=normalize, linewidth=0.8, ax=ax,figsize=(40,20))
-    #     # # if idx == 0:
-    #     # #     merged.boundary.plot();
-    #     # merged.plot(column='cat',cmap=colors[idx])
-    #     # # merged.plot('Density', cmap=colors[idx],norm=normalize, linewidth=0.8, ax=ax, edgecolor='0.8', figsize=(40,20))
-
-    # plt.show()
-    # outfile = '../plots/map/%s.png'%(d)
-    # plt.savefig(outfile,bbox_inches='tight')
 
 def generate_heatmap_color():
     os.chdir('../data/')
-    covid = pd.read_csv('Covid-19-density.csv',header=0)
+    # covid = pd.read_csv('Covid-19-density.csv',header=0)
+    covid = pd.read_csv('Covid-19-R-cleaned.csv',header=0)
     date_list = covid['Time Stamp'].unique()
     for d in date_list:
         generate_heatmap_color_bydate(d)
@@ -494,13 +494,11 @@ if __name__ == "__main__":
     # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     # process_covid()
     # process_density()
-    # retrieve_covid_date()    
-    # generate_heatmap()
 
-    # generate_heatmap_color_bydate('04-1-2020')
-    generate_heatmap_color_bydate('04-1-2020')
+    # retrieve_risk_date()    
 
-    # generate_heatmap_color()
+    generate_heatmap_color()
+    # generate_heatmap_color_bydate('04-27-2020')
 
     # Plots
     # plot_caseden_popden('04-1-2020')
