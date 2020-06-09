@@ -211,8 +211,10 @@ def retrieve_covid_date():
 
 def retrieve_risk_date():
     os.chdir('../data/')
-    covid = pd.read_csv('Covid-19-R-cleaned.csv',header=0)
-    denfold = 'dailycasesR'
+    # covid = pd.read_csv('Covid-19-R-cleaned.csv',header=0)
+    # denfold = 'dailycases'
+    covid = pd.read_csv('Covid-19-R-Prediction-cleaned.csv',header=0)
+    denfold = 'dailycasesP'
     if not os.path.exists(denfold):
         os.makedirs(denfold)
     date_list = covid['Time Stamp'].unique()
@@ -231,10 +233,14 @@ def generate_heatmap_color_bydate(d):
     if not os.path.exists(mapfold):
         os.makedirs(mapfold)
     os.chdir('../data/')
-    covid = pd.read_csv('Covid-19-R-cleaned.csv',header=0)
+    # covid = pd.read_csv('Covid-19-R-cleaned.csv',header=0)
+    # filename = 'dailycasesR/%s.csv'%(d)
+    # outfile = '../plots/map/risk_%s.png'%(d)
+    covid = pd.read_csv('Covid-19-R-Prediction-cleaned.csv',header=0)
+    filename = 'dailycasesP/%s.csv'%(d)
     
     regions = gpd.read_file('shapefile/la.shp')
-    filename = 'dailycasesR/%s.csv'%(d)
+    
     data = pd.read_csv(filename,header=0)
 
 
@@ -288,7 +294,8 @@ def generate_heatmap_color_bydate(d):
     ax.axis('off')
     plt.legend(handles=colors_patch,loc = "lower right",facecolor="lightblue")
     # plt.show()
-    outfile = '../plots/map/risk_%s.png'%(d)
+
+    outfile = '../plots/map/predictions/risk_%s.png'%(d)
     plt.savefig(outfile,bbox_inches='tight')
 
 def generate_heatmap_color_bydate2(d):
