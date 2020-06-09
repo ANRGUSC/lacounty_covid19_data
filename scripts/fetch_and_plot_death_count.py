@@ -52,7 +52,7 @@ abs_out_death_count_file = os.path.join(script_dir, out_path_dfile)
 headers = {'accept': "application/json", 'accept': "text/csv"}
 
 #global variables for storing day and the data_array
-starting_date=100 #the data for Covid-19 is available from 16th of March
+starting_date=101 #the data for Covid-19 is available from 16th of March
 data_array={} #this dictionary will store all the data
 
 #parsing json
@@ -238,7 +238,7 @@ def get_data(urlcomp):
 
 
 #execution starts here - range entry for the following for loop denotes the press release identifiers
-for press_release_id in range(2430,2431):
+for press_release_id in range(2432,2433):
     print(press_release_id)
     #ignoring a duplicate spanish release
     if press_release_id != 2296:
