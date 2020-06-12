@@ -229,13 +229,13 @@ def retrieve_risk_date():
 
     
 def generate_heatmap_color_bydate(d):
-    mapfold='../plots/map'
+    mapfold='../plots/R-map'
     if not os.path.exists(mapfold):
         os.makedirs(mapfold)
     os.chdir('../data/')
     covid = pd.read_csv('Covid-19-R-cleaned.csv',header=0)
     filename = 'dailycasesR/%s.csv'%(d)
-    outfile = '../plots/map/risk_%s.png'%(d)
+    outfile = '../plots/R-map/risk_%s.png'%(d)
     #covid = pd.read_csv('Covid-19-R-cleaned.csv',header=0)
     #filename = 'dailycasesP/%s.csv'%(d)
     
@@ -263,7 +263,7 @@ def generate_heatmap_color_bydate(d):
     merged['Time Stamp'] = merged['Time Stamp'].fillna(0)
     merged['Longitude'] = merged['Longitude'].fillna(0)
     merged['Latitude'] = merged['Latitude'].fillna(0)
-    merged['Risk-Score'] = merged['Risk-Score'].fillna(0)
+    #merged['Risk-Score'] = merged['Risk-Sco'].fillna(0)
     merged['Risk-Level'] = merged['Risk-Level'].fillna('-1')
     merged['cat'] = merged['cat'].fillna('No data')
     merged['color'] = merged['color'].fillna('White')
@@ -299,7 +299,7 @@ def generate_heatmap_color_bydate(d):
     plt.savefig(outfile,bbox_inches='tight')
 
 def generate_heatmap_color_bydate2(d):
-    mapfold='../plots/map'
+    mapfold='../plots/R-map'
     if not os.path.exists(mapfold):
         os.makedirs(mapfold)
     os.chdir('../data/')
@@ -311,7 +311,7 @@ def generate_heatmap_color_bydate2(d):
     bins = [0,min_den+step,min_den+2*step,min_den+3*step,max_den]
 
     regions = gpd.read_file('shapefile/la.shp')
-    filename = 'dailycases/%s.csv'%(d)
+    filename = 'dailycasesR/%s.csv'%(d)
     data = pd.read_csv(filename,header=0)
 
     colors = ['Green','Yellow','Orange','Red']
@@ -347,7 +347,7 @@ def generate_heatmap_color_bydate2(d):
     plt.tight_layout()
     ax.axis('off')
     #plt.show()
-    outfile = '../plots/map/%s.png'%(d)
+    outfile = '../plots/R-map/%s.png'%(d)
     plt.savefig(outfile,bbox_inches='tight')
 
 
@@ -362,7 +362,7 @@ def generate_heatmap_color():
 
 
 def generate_heatmap_bydate(d):
-    mapfold='../plots/map'
+    mapfold='../plots/R-map'
     if not os.path.exists(mapfold):
         os.makedirs(mapfold)
     os.chdir('../data/')
@@ -389,7 +389,7 @@ def generate_heatmap_bydate(d):
     normalize = matplotlib.colors.Normalize(vmin=0, vmax=max_den)
     merged.plot('Density', cmap=color,norm=normalize, linewidth=0.8, ax=ax, edgecolor='0.8', figsize=(40,20))
     # plt.show()
-    outfile = '../plots/map/%s.png'%(d)
+    outfile = '../plots/R-map/%s.png'%(d)
     plt.savefig(outfile,bbox_inches='tight')
 
 
@@ -438,7 +438,7 @@ def plot_caseden_popden(d):
     import seaborn as sns
 
     os.chdir('../data/')
-    casefile = 'dailycases/%s.csv'%(d)
+    casefile = 'dailycasesR/%s.csv'%(d)
     caseden = pd.read_csv(casefile,header=0)
     popden = pd.read_csv('population_density.csv',header=0)
     merged = pd.merge(caseden, popden, on='Region')
@@ -503,7 +503,6 @@ if __name__ == "__main__":
     # process_density()
 
     #retrieve_risk_date()    
-
     generate_heatmap_color()
 
     # Plots
