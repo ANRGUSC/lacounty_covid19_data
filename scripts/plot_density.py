@@ -148,5 +148,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'cumulative'
-	number_of_days_passed_from_16th = 103
+	number_of_days_passed_from_16th = 104
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)		
