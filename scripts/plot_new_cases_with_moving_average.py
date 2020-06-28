@@ -143,7 +143,7 @@ ax.set_title(state_name)
 # FIX HERE -------- for fittting the y axis to the largest value in y
 ax.set_ylim(0.0,max_value+10.00)
 # --------------------------------------------------------------------
-ax.xaxis.set_major_locator(mdates.WeekdayLocator())
+ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
 #plt.show()
 
