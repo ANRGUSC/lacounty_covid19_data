@@ -12,7 +12,8 @@ covid_data_path = "../data/lacounty_covid.json"
 covid_data_file_path = os.path.join(script_dir, covid_data_path)
 #setting up the file path
 script_dir = os.path.dirname(__file__)
-population_path = "../data/population.json"
+#population_path = "../data/population.json"
+population_path = "../data/population_whole_county.json"
 pop_data_file_path = os.path.join(script_dir, population_path)
 #setting up the out file path
 script_dir = os.path.dirname(__file__)
@@ -74,6 +75,10 @@ def get_population_vec(list_communities):
 		output_list = []
 		for communiuty_obj in list_communities:
 			print(communiuty_obj.actual_name)
+			prefixex = ['cityof','losangeles-','unincorporated-','Los Angeles-','Los Angeles -',' Los Angeles-']
+			for word in prefixex:
+				communiuty_obj.actual_name = (communiuty_obj.actual_name.replace(word,'')).strip()
+			print(communiuty_obj.actual_name)
 			temp = [val for key,val in data.items() if communiuty_obj.actual_name == key.strip().split('--')[0]]
 			print(temp)
 			if temp :
@@ -98,9 +103,10 @@ def main(top_i_comm, type_plot,Today_date):
 					actual_name_of_community = 	data[str(day)][i][0].strip()
 					name_of_community = data[str(day)][i][0].strip().lower().replace(' ','')
 					# cleaning city names, removing following prefixes
-					prefixex = ['cityof','losangeles-','unincorporated-','Los Angeles-','Los Angeles -']
+					prefixex = ['cityof','losangeles-','unincorporated-','Los Angeles-','Los Angeles -',' Los Angeles-']
 					for word in prefixex:
 						name_of_community = name_of_community.replace(word,'') 
+						#print(name_of_community)
 					# cleaning confirmed number, e.g. <1 will be 1
 					confirmed_cases   = data[str(day)][i][0].strip().lower(),re.sub("[^0-9]", "", data[str(day)][i][1].strip())
 					if name_of_community not in dict_county.keys():
@@ -148,5 +154,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'cumulative'
-	number_of_days_passed_from_16th = 127
+	number_of_days_passed_from_16th = 128
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)		
