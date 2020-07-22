@@ -35,7 +35,8 @@ def retrieve_all_regions():
 
 def process_population():
     os.chdir('../data/')
-    latlon = pd.read_csv('latlon.csv',header=0)
+    # latlon = pd.read_csv('latlon.csv',header=0)
+    latlon = pd.read_csv('latlon_covid.csv',header=0)
     with open(population_json, 'r') as j:
         regs = json.loads(j.read())
     for k,v in regs.items():
@@ -47,7 +48,7 @@ def process_population():
             print('No data for this region')
             print(reg)
             latlon.loc[idx,'Population'] = 0
-    latlon.to_csv (r'../data/processed_population.csv', index = False, header=True)
+    latlon.to_csv (r'../data/processed_population_fixedmissing.csv', index = False, header=True)
             
 def retrieve_all_regions_covid():
     os.chdir('../data/')
@@ -139,7 +140,7 @@ def process_covid():
 def process_density():
     os.chdir('../data/')
     covid_agg = pd.read_csv('Covid-19-aggregated.csv',header=0)
-    population = pd.read_csv('processed_population.csv',header=0)
+    population = pd.read_csv('processed_population_fixedmissing.csv',header=0)
     columns = ['Time Stamp','Region', 'Latitude', 'Longitude','Density']
     covid_den = pd.DataFrame(columns=columns)
     c = 0
@@ -241,12 +242,29 @@ def generate_heatmap_bydate(d):
     regions = gpd.read_file('shapefile/la.shp')
     filename = 'dailycases/%s.csv'%(d)
     data = pd.read_csv(filename,header=0)
+
+    #check mis-match name 
+    mismatch_list = ['Bel-Air','La Crescenta-Montrose','Lake View Terrace','Lopez/Kagel Canyons','Mid-City','Mount Washington','Playa del Rey',
+    'Silver Lake','Unincorporated Santa Monica Mountains','View Park-Windsor Hills','West Whittier-Los Nietos'] #shapefile
+
+    convert_list = ['Bel Air','La Crescenta','Lakeview Terrace','Kagel/Lopez Canyons','Mid-city','Mt. Washington','Playa Del Rey',
+    'Silverlake','Santa Monica Mountains','View Park/Windsor Hills','West Whittier/Los Nietos'] #data
+
+    for idx,name in enumerate(convert_list):
+        data.loc[data['Region'] == name, 'Region'] = mismatch_list[idx]
+
     merged = regions.set_index('name').join(data.set_index('Region'))
     merged = merged.reset_index()
 
+    
+
+    c = 0
     merged_nan = merged[merged['Density'].isnull()]
+    # print(merged_nan)
     for i in merged_nan['name']:
         print(i)
+        c = c+1
+    print(c)
 
     merged = merged.fillna(0)
     fig, ax = plt.subplots(1, figsize=(40, 20))
@@ -276,12 +294,13 @@ def generate_heatmap():
 if __name__ == "__main__":
     # all_regions = retrieve_all_regions()
     # retrieve_gps(all_regions) # Run this to generate latlon.csv using the API 
-    # process_population()
+    
 
     # Run daily
     # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
-    process_covid()
+    # process_population()  # Run this to generate propulation for corresponding lat,lon
+    # process_covid()
     # process_density()
     # retrieve_covid_date()    
-    # generate_heatmap()
-    # generate_heatmap_bydate('07-19-2020')
+    # # generate_heatmap()
+    generate_heatmap_bydate('07-19-2020')
