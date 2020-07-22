@@ -223,6 +223,11 @@ def generate_heatmap_bydate(d):
     data = pd.read_csv(filename,header=0)
     merged = regions.set_index('name').join(data.set_index('Region'))
     merged = merged.reset_index()
+
+    merged_nan = merged[merged['R'].isnull()]
+    for i in merged_nan['name']:
+        print(i)
+
     merged = merged.fillna(0)
     fig, ax = plt.subplots(1, figsize=(40, 20))
     ax.axis('off')
@@ -257,5 +262,6 @@ if __name__ == "__main__":
     #retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     #process_covid()
     #process_density()
-    retrieve_covid_date()    
+    # retrieve_covid_date()    
     #generate_heatmap()
+    generate_heatmap_bydate('07-19-2020')

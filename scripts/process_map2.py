@@ -16,10 +16,11 @@ import geopandas as gpd
 import requests
 
 
-API_KEY = '576004cefa1b43648fd6cd7059ae8196' # get api key from:  https://opencagedata.com
+#API_KEY = '576004cefa1b43648fd6cd7059ae8196' # get api key from:  https://opencagedata.com
+API_KEY = '753e24640a1d458295a65e6a0cb77a36'
 covid_json = 'lacounty_covid.json'
-population_json = 'population.json'
-#population_json = "population_whole_county.json"
+# population_json = 'population.json'
+population_json = "population_whole_county.json"
 
 
 def retrieve_all_regions():
@@ -75,7 +76,7 @@ def retrieve_all_regions_covid():
 
 def process_covid():
     os.chdir('../data/')
-    latlon_covid = pd.read_csv('latlon_covid.csv',header=0)
+    latlon_covid = pd.read_csv('latlon_covid_fixedmissing.csv',header=0)
     with open(covid_json, 'r') as j:
         covid = json.loads(j.read())
     columns = ['Time Stamp','Region', 'Latitude', 'Longitude','Number of cases']
@@ -126,8 +127,10 @@ def process_covid():
                 df.loc[c] = [ts,reg,lat,lon,cases]
                 c = c+1
             except Exception as e:
-                print('Something wrong while parsing ')
+                print('Something wrong while parsing process covid')
+                print('-------')
                 print(tmp)
+                print(reg)
                 
     df.to_csv ('../data/Covid-19.csv', index = False, header=True)
     newdf = df.groupby(['Time Stamp','Region', 'Latitude', 'Longitude'])['Number of cases'].sum().reset_index()
@@ -228,6 +231,7 @@ def retrieve_covid_date():
 
 
 def generate_heatmap_bydate(d):
+
     mapfold='../plots/map'
     if not os.path.exists(mapfold):
         os.makedirs(mapfold)
@@ -239,6 +243,11 @@ def generate_heatmap_bydate(d):
     data = pd.read_csv(filename,header=0)
     merged = regions.set_index('name').join(data.set_index('Region'))
     merged = merged.reset_index()
+
+    merged_nan = merged[merged['Density'].isnull()]
+    for i in merged_nan['name']:
+        print(i)
+
     merged = merged.fillna(0)
     fig, ax = plt.subplots(1, figsize=(40, 20))
     ax.axis('off')
@@ -252,7 +261,7 @@ def generate_heatmap_bydate(d):
     cbar.ax.tick_params(labelsize=20) 
     normalize = matplotlib.colors.Normalize(vmin=0, vmax=max_den)
     merged.plot('Density', cmap=color,norm=normalize, linewidth=0.8, ax=ax, edgecolor='0.8', figsize=(40,20))
-    # plt.show()
+    plt.show()
     outfile = '../plots/map/%s.png'%(d)
     plt.savefig(outfile,bbox_inches='tight')
     plt.close()
@@ -265,13 +274,14 @@ def generate_heatmap():
         generate_heatmap_bydate(d)
 
 if __name__ == "__main__":
-    #all_regions = retrieve_all_regions()
-    #retrieve_gps(all_regions) # Run this to generate latlon.csv using the API 
-    #process_population()
+    # all_regions = retrieve_all_regions()
+    # retrieve_gps(all_regions) # Run this to generate latlon.csv using the API 
+    # process_population()
 
     # Run daily
-    retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
+    # retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     process_covid()
-    #process_density()
-    #retrieve_covid_date()    
-    #generate_heatmap()
+    # process_density()
+    # retrieve_covid_date()    
+    # generate_heatmap()
+    # generate_heatmap_bydate('07-19-2020')
