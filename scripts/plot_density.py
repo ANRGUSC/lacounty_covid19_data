@@ -8,7 +8,8 @@ import matplotlib.ticker as mticker
 
 #setting up the file path
 script_dir = os.path.dirname(__file__)
-covid_data_path = "../data/lacounty_covid.json"
+#covid_data_path = "../data/lacounty_covid.json"
+covid_data_path = "../data/community_mapped_case_data.json"
 covid_data_file_path = os.path.join(script_dir, covid_data_path)
 #setting up the file path
 script_dir = os.path.dirname(__file__)
@@ -109,12 +110,14 @@ def main(top_i_comm, type_plot,Today_date):
 						#print(name_of_community)
 					# cleaning confirmed number, e.g. <1 will be 1
 					confirmed_cases   = data[str(day)][i][0].strip().lower(),re.sub("[^0-9]", "", data[str(day)][i][1].strip())
-					if name_of_community not in dict_county.keys():
-						dict_county[name_of_community] = community(name_of_community,actual_name_of_community,Today_date)
-						list_communities.append(dict_county[name_of_community ])  
-						dict_county[name_of_community].addnumber(day,int(confirmed_cases[1]))
-					else:
-						dict_county[name_of_community].addnumber(day,int(confirmed_cases[1]))
+					if(name_of_community != "longbeach"):
+						print(name_of_community)
+						if name_of_community not in dict_county.keys():
+							dict_county[name_of_community] = community(name_of_community,actual_name_of_community,Today_date)
+							list_communities.append(dict_county[name_of_community ])  
+							dict_county[name_of_community].addnumber(day,int(confirmed_cases[1]))
+						else:
+							dict_county[name_of_community].addnumber(day,int(confirmed_cases[1]))
 
 		# get daily cases of all communities because the cumulative is already obtained
 		for communiuty_obj in list_communities:
@@ -135,6 +138,7 @@ def main(top_i_comm, type_plot,Today_date):
 		for en,communiuty_obj in enumerate(newlist):
 			if communiuty_obj.name != '-investigatedcases' and communiuty_obj.name !='-underinvestigation' and top_i_comm > 0:
 				# append this city to the list
+				#print(communiuty_obj)
 				list_selected_communities.append(communiuty_obj)
 				plt.plot(days, communiuty_obj.plot_info(type_plot)/(get_population_vec([communiuty_obj])[0]*1.0),'o-',label = communiuty_obj.actual_name)
 				top_i_comm -= 1
@@ -154,5 +158,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'cumulative'
-	number_of_days_passed_from_16th = 128
+	number_of_days_passed_from_16th = 130
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)		
