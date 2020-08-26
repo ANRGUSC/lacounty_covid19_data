@@ -67,6 +67,7 @@ class community:
 			# for cumulative
 			else:
 				output = self.confirmed
+			#print(output)
 		return output	
 
 def get_population_vec(list_communities):
@@ -140,7 +141,13 @@ def main(top_i_comm, type_plot,Today_date):
 				# append this city to the list
 				#print(communiuty_obj)
 				list_selected_communities.append(communiuty_obj)
-				plt.plot(days, communiuty_obj.plot_info(type_plot)/(get_population_vec([communiuty_obj])[0]*1.0),'o-',label = communiuty_obj.actual_name)
+				output_list=communiuty_obj.plot_info(type_plot)/(get_population_vec([communiuty_obj])[0]*1.0)
+				if(output_list[-1]-output_list[-2]>0.02):
+					output_list[-1]=output_list[-2]
+				plt.plot(days, output_list,'o-',label = communiuty_obj.actual_name)
+				#plt.plot(days, communiuty_obj.plot_info(type_plot)/(get_population_vec([communiuty_obj])[0]*1.0),'o-',label = communiuty_obj.actual_name)
+				print(output_list[-1])
+				print(output_list[-2])
 				top_i_comm -= 1
 		plt.legend()
 		plt.xlabel('Days since March 16, 2020')
@@ -158,5 +165,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'cumulative'
-	number_of_days_passed_from_16th = 161
+	number_of_days_passed_from_16th = 162
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)
