@@ -104,7 +104,7 @@ def main(top_i_comm, type_plot,Today_date):
 		# sort communities in the whole list based on total confirmed cases so far and plot top i communities
 		newlist = sorted(list_communities,key=lambda x: x.total_confirmed_so_far, reverse=True)
 		for en,communiuty_obj in enumerate(newlist):
-			if communiuty_obj.name != '-investigatedcases' and communiuty_obj.name !='-underinvestigation' and communiuty_obj.name !='longbeach' and top_i_comm > 0:
+			if communiuty_obj.name != '-investigatedcases' and communiuty_obj.name !='-underinvestigation' and communiuty_obj.name !='longbeach' and communiuty_obj.name !='santamonicamountains' and top_i_comm > 0:
 				#print(en,communiuty_obj.name, communiuty_obj.total_confirmed_so_far)
 				#print(communiuty_obj.dic_confirmed)
 				plt.plot(days, communiuty_obj.plot_info(type_plot),'o--',label = communiuty_obj.actual_name)
@@ -127,5 +127,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'daily'
-	number_of_days_passed_from_16th = 174
+	number_of_days_passed_from_16th = 177
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)
