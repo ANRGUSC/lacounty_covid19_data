@@ -23,10 +23,12 @@ were used for scraping the data below:
 
 
 ## Scripts
-The scripts folder contains two scripts. The script titled "fetch_and_restore.py" gets the data from the above 
-web sites and store them in a JSON file for further processing, visualization, and analytics purposes. For visualization 
-purposes, we provide another script (visualization_COVID.py). These scripts have been created to process the press releases 
-starting from 16th of March to 27th of March. 
+The [scripts](https://github.com/ANRGUSC/lacounty_covid19_data/tree/master/scripts) folder contains the python files needed to run and produce the data and plots in this repository. The script titled [fetch_and_store.py](https://github.com/ANRGUSC/lacounty_covid19_data/blob/master/scripts/fetch_and_store.py) web scrapes data from the above web sites and stores them in a JSON file for further processing, visualization, and analytics purposes. Also, we provide several scripts that plot heat maps and graph the risk estimation value for communities across time—these are prefixed with 'plot_' in the file name. These scripts have been created to process the press releases starting from 16th of March to 27th of March. 
+
+## Requirements
+The requirements.txt file contains the modules needed to run these scripts and can be installed by running any of the following in the terminal:
+* pip install -r requirements.txt
+* conda install --file requirements.txt
 
 ## Data
 For individuals interested in the data, you'll find the [data](https://github.com/ANRGUSC/lacounty_covid19_data/tree/master/data) folder to be useful. We provide CSV files of daily Covid-19 cases by community—file named [Covid-19.csv](https://github.com/ANRGUSC/lacounty_covid19_data/blob/master/data/Covid-19.csv). Similarly, this information can be found in JSON files, where the keys represent the "day" in March and the values denote the cases in each community in LA county—files named [lacounty_covid.json](https://github.com/ANRGUSC/lacounty_covid19_data/blob/master/data/lacounty_covid.json) and [lacounty_total_case_count.json](https://github.com/ANRGUSC/lacounty_covid19_data/blob/master/data/lacounty_total_case_count.json). 
