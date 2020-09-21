@@ -92,6 +92,7 @@ def main(top_i_comm, type_plot,Today_date):
 					list_communities.append(dict_county[name_of_community ])  
 					dict_county[name_of_community].addnumber(day,int(confirmed_cases[1]))
 				else:
+					print(day,int(confirmed_cases[1]))
 					dict_county[name_of_community].addnumber(day,int(confirmed_cases[1]))
 		# find communiuty with highest 
 		for communiuty in dict_county.keys():
@@ -108,7 +109,7 @@ def main(top_i_comm, type_plot,Today_date):
 				#print(en,communiuty_obj.name, communiuty_obj.total_confirmed_so_far)
 				#print(communiuty_obj.dic_confirmed)
 				plt.plot(days, communiuty_obj.plot_info(type_plot),'o--',label = communiuty_obj.actual_name)
-				#print(top_i_comm, communiuty_obj.plot_info(type_plot))
+				#print(top_i_comm, communiuty_obj.plot_info(t9pe_plot))
 				top_i_comm -= 1
 		plt.legend()
 		plt.xlabel('Days since March 16, 2020')
@@ -127,5 +128,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'daily'
-	number_of_days_passed_from_16th = 188
+	number_of_days_passed_from_16th = 189
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)
