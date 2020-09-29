@@ -17,8 +17,10 @@ import requests
 
 
 API_KEY = '576004cefa1b43648fd6cd7059ae8196' # get api key from:  https://opencagedata.com
-covid_json = 'lacounty_covid_new_data.json'
-population_json = 'population.json'
+#covid_json = 'lacounty_covid.json'
+covid_json='community_mapped_case_data.json'
+#population_json = 'population.json'
+population_json = "population_whole_county.json"
 
 
 def retrieve_all_regions():
@@ -34,13 +36,17 @@ def retrieve_all_regions():
 def process_population():
     os.chdir('../data/')
     latlon = pd.read_csv('latlon.csv',header=0)
-
     with open(population_json, 'r') as j:
         regs = json.loads(j.read())
     for k,v in regs.items():
         reg = k.split('--')[0].strip()
-        idx = latlon.index[latlon['Region'] == reg]
-        latlon.loc[idx,'Population'] = int(v)
+        try: 
+            idx = latlon.index[latlon['Region'] == reg]
+            latlon.loc[idx,'Population'] = int(v)
+        except Exception as e:
+            print('No data for this region')
+            print(reg)
+            latlon.loc[idx,'Population'] = 0
     latlon.to_csv (r'../data/processed_population.csv', index = False, header=True)
             
 def retrieve_all_regions_covid():
@@ -57,7 +63,7 @@ def retrieve_all_regions_covid():
                 if 'Unincorporated - ' in tmp:
                     tmp2 = tmp.split('-')[1].strip()
                 elif 'Los Angeles - ' in tmp:
-                    tmp2 = tmp.split('-')[1].strip()
+                    tmp2 = tmp.split('Los Angeles -')[1].strip()
                 elif 'City of ' in tmp:
                     tmp2 = tmp.split('City of ')[1].strip()
                 else:
@@ -109,7 +115,7 @@ def process_covid():
                 if 'Unincorporated' in tmp:
                     reg = tmp.split('-')[1].strip()
                 elif 'Los Angeles - ' in tmp:
-                    reg = tmp.split('-')[1].strip()
+                    reg = tmp.split('Los Angeles -')[1].strip()
                 elif 'City of ' in tmp:
                     reg = tmp.split('City of ')[1].strip()
                 else:
@@ -142,7 +148,9 @@ def process_density():
             covid_den.loc[c] = [row['Time Stamp'],row['Region'],row['Latitude'],row['Longitude'],density]
             c = c+1
         except Exception as e:
+            #print(population.index[row['Region']])
             print('Can not find the community population of '+row['Region'])
+    print(c)
     covid_den.to_csv ('../data/Covid-19-density.csv', index = False, header=True)
 
 
@@ -231,6 +239,11 @@ def generate_heatmap_bydate(d):
     data = pd.read_csv(filename,header=0)
     merged = regions.set_index('name').join(data.set_index('Region'))
     merged = merged.reset_index()
+
+    merged_nan=merged[merged['Density'].isnull()]
+    for i in merged_nan['name']:
+        print(i)
+    print("---------------------------------------------")    
     merged = merged.fillna(0)
     fig, ax = plt.subplots(1, figsize=(40, 20))
     ax.axis('off')
@@ -254,12 +267,13 @@ def generate_heatmap():
     covid = pd.read_csv('Covid-19-density.csv',header=0)
     date_list = covid['Time Stamp'].unique()
     for d in date_list:
+        print(d)
         generate_heatmap_bydate(d)
 
 if __name__ == "__main__":
-    # all_regions = retrieve_all_regions()
-    # retrieve_gps(all_regions) # Run this to generate latlon.csv using the API 
-    # process_population()
+    #all_regions = retrieve_all_regions()
+    #retrieve_gps(all_regions) # Run this to generate latlon.csv using the API 
+    #process_population()
 
     # Run daily
     #retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 

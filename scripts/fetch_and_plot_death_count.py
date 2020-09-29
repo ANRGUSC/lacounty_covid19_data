@@ -52,7 +52,7 @@ abs_out_death_count_file = os.path.join(script_dir, out_path_dfile)
 headers = {'accept': "application/json", 'accept': "text/csv"}
 
 #global variables for storing day and the data_array
-starting_date=106 #the data for Covid-19 is available from 16th of March
+starting_date=170 #the data for Covid-19 is available from 16th of March
 data_array={} #this dictionary will store all the data
 
 #parsing json
@@ -60,7 +60,7 @@ with open(abs_out_death_count_file, 'r') as jsonfile:
     data_array=json.load(jsonfile)
 print(data_array.keys())
 #del(data_array['38'])
-
+#data_array[starting_date]= [["Deaths", "4945"]]
 
 #  -------------------     The following 2 functions are for plotting -------
 def create_dataframe_for_R(new_case_array):  
@@ -208,6 +208,7 @@ def parse_list(list_object):
             #filtering death based on the case number value - we assume that 
             #the death numbers below 350. The script has to be updated with a 
             #better parsing when the total death count reaches 250 or so.
+            out[1]=out[1].replace("br>","")
             out[1]=out[1].replace(",","")
             if int(out[1]) < 350:
                 out[0] = "Deaths"
@@ -238,12 +239,12 @@ def get_data(urlcomp):
 
 
 #execution starts here - range entry for the following for loop denotes the press release identifiers
-for press_release_id in range(2443,2444):
-    print(press_release_id)
-    #ignoring a duplicate spanish release
-    if press_release_id != 2296:
-        urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
-    get_data(urlcomp)
+# for press_release_id in range(2580,2581):
+#     print(press_release_id)
+#     #ignoring a duplicate spanish release
+#     if press_release_id != 2296:
+#         urlcomp="http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid="+str(press_release_id)
+#     get_data(urlcomp)
 
 # print(data_array)
 
@@ -269,7 +270,7 @@ y_array.sort()
 plt.plot(x_array,y_array,marker='o', color='b')
 plt.xlabel("Days since March 22, 2020")
 plt.ylabel("Deaths")
-plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(5))
+plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(15))
 plt.title("LA County Total Deaths")
 plt.savefig(abs_out_file_path)
 plt.yscale('log')
@@ -301,7 +302,7 @@ ax.set_title(state_name)
 # FIX HERE -------- for fittting the y axis to the largest value in y
 ax.set_ylim(0.0,(max_value//100)*100.00+100.00)
 # --------------------------------------------------------------------
-ax.xaxis.set_major_locator(mdates.WeekdayLocator())
+ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=3))
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
 #plt.show()
 plt.ylabel("Deaths")
@@ -321,4 +322,4 @@ plt.savefig(abs_out_file_newdeath_path)
 # plt.close()
 
 # # #writing dictionary to a file
-write_json_to_file(abs_out_death_count_file,data_array)    
+#write_json_to_file(abs_out_death_count_file,data_array)    

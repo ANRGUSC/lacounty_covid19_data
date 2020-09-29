@@ -4,10 +4,10 @@ import os
 
 #setting up the file path
 script_dir = os.path.dirname(__file__)
-rel_path = "../data/population.csv"
+rel_path = "../data/population_whole_county.csv"
 abs_file_path = os.path.join(script_dir, rel_path)
 
-out_file="../data/population.json"
+out_file="../data/population_whole_county.json"
 out_path=os.path.join(script_dir, out_file)
 
 #this dictionaty will hold the parsed data in JSON format
