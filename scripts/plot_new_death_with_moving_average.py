@@ -43,14 +43,16 @@ def plot_rt(result, ax,state_name):
         np.linspace(BELOW,MIDDLE,25),
         np.linspace(MIDDLE,ABOVE,25)
     ])
-    print("camp",cmap)
+    #print("camp",cmap)
     color_mapped = lambda y: np.clip(y, .5, 1.5)-.5
     
     index = result['Cases'].index.get_level_values('Time Stamp')
     values = result['Cases'].values
     
-    max_value = values.max()
-    print("maxxx",max_value)
+    max_value = (values[~np.isnan(values)]).max()
+ 
+    #print(values)
+    #print("maxxx",max_value)
     # Plot dots and line
     ax.plot(index, values, c='k', zorder=1, alpha=.25)
     ax.scatter(index,
@@ -76,7 +78,11 @@ def plot_rt(result, ax,state_name):
 
 def movingaverage(interval, window_size):
     window = numpy.ones(int(window_size))/float(window_size)
-    return numpy.convolve(interval, window, 'same')
+    #print(numpy.ones(int(window_size))/float(window_size))
+    #print(float(window_size))
+    #print("printing window")
+    #print(window)
+    return numpy.convolve(interval, window, 'valid')
 
 
 #setting up the out file path
@@ -105,6 +111,7 @@ x_array=[]
 y_array=[]
 i=1;
 for key,value in data_array.items():
+    #print(str(key)+"->",str(value))
     x_array.append(int(i))
     y_array.append(int(value[0][1]))
     i=i+1
@@ -112,31 +119,41 @@ for key,value in data_array.items():
 #Sorting data
 y_array.sort()
 
+print(y_array)
+
 #creating an array for total new cases
 new_case_array=[]
 for i in range(0,len(y_array)-1):
     new_case_array.append(y_array[i+1]-y_array[i])
 del(x_array[-1])
 
+print(new_case_array)
+
 #creating an array of 7-day moving averages
-x_av = movingaverage(new_case_array, 7)
+#x_av = movingaverage(new_case_array, 7)
+#print(new_case_array)
 #print(x_av)
 
 
-result = create_dataframe_for_R(x_av)
+#result = create_dataframe_for_R(x_av)
+#creating an array of 7-day moving averages
+processed_df = create_dataframe_for_R(new_case_array)
+result=processed_df.rolling(7).mean()
+print(result)
+
 fig, ax = plt.subplots(figsize=(600/72,400/72))
 
-state_name = "LA County Total New Deaths (7-day moving average)"
+state_name = "LA County Total New Deaths* (7-day moving average)"
 plot_rt(result, ax,state_name)
-print("val")
-print(result)
+#print("val")
+#print(result)
 
 max_value = result['Cases'].max()
 ax.set_title(state_name)
 # FIX HERE -------- for fittting the y axis to the largest value in y
 ax.set_ylim(0.0,max_value+10.00)
 # --------------------------------------------------------------------
-ax.xaxis.set_major_locator(mdates.WeekdayLocator())
+ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=4))
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
 #plt.show()
 

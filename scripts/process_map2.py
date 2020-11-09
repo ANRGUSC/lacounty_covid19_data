@@ -114,11 +114,23 @@ def process_covid():
             print(d)
             ts = '08-'+str(d)+'-2020'
             print(ts)
-        else:
+        elif int(k) < 215:
             d = int(k)-184
             print(d)
             ts = '09-'+str(d)+'-2020'
-            print(ts)        
+            print(ts) 
+        elif int(k) < 246:
+            d = int(k)-214
+            print(d)
+            ts = '10-'+str(d)+'-2020'
+            print(ts)
+        else:
+            d = int(k)-245
+            print(d)
+            ts = '11-'+str(d)+'-2020'
+            print(ts)
+
+
         for value in v:
             tmp = value[0].strip()
             try:
@@ -311,9 +323,9 @@ if __name__ == "__main__":
     # Run daily
     #retrieve_gps_covid() # Run this to generate latlon_covid.csv using the API 
     #process_population()  # Run this to generate propulation for corresponding lat,lon
-    #process_covid()
-    #process_density()
-    #retrieve_covid_date()    
+    process_covid()
+    process_density()
+    retrieve_covid_date()    
     generate_heatmap()
     #generate_heatmap_bydate('07-21-2020')
 

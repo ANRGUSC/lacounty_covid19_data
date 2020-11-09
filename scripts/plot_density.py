@@ -154,7 +154,7 @@ def main(top_i_comm, type_plot,Today_date):
 		plt.ylabel('Cases/population (Case Density)')
 		plt.grid(True)
 		plt.tight_layout()
-		plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(15))
+		plt.gca().xaxis.set_major_locator(mticker.MultipleLocator(20))
 		# plt.yscale('log')
 		plt.title('Case Density for Top 6 Communities')
 		#plt.savefig('testfig.png',dpi=300, bbox_inches = "tight")
@@ -165,5 +165,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'cumulative'
-	number_of_days_passed_from_16th = 236
+	number_of_days_passed_from_16th = 238
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)
