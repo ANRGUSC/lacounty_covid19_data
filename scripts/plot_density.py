@@ -111,7 +111,7 @@ def main(top_i_comm, type_plot,Today_date):
 						#print(name_of_community)
 					# cleaning confirmed number, e.g. <1 will be 1
 					confirmed_cases   = data[str(day)][i][0].strip().lower(),re.sub("[^0-9]", "", data[str(day)][i][1].strip())
-					if(name_of_community != "longbeach"):
+					if(name_of_community != "longbeach" or name_of_community != "City"):
 						print(name_of_community)
 						if name_of_community not in dict_county.keys():
 							dict_county[name_of_community] = community(name_of_community,actual_name_of_community,Today_date)
@@ -165,5 +165,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'cumulative'
-	number_of_days_passed_from_16th = 238
+	number_of_days_passed_from_16th = 240
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)
