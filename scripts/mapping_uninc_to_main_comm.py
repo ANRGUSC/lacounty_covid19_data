@@ -177,3 +177,7 @@ for key in cases:
 #writing dictionary to a JSON file
 out_file = open(out_path,'w+')
 json.dump(new_case_data_dict, out_file)
+out_file_lacounty_covid = open(abs_file_path_json,'w+')
+json.dump(new_case_data_dict, out_file_lacounty_covid)
+
+
