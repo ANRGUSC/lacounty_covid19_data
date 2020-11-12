@@ -21,8 +21,8 @@ import sys
 headers = {'accept': "application/json", 'accept': "text/html"}
 
 #global variables for storing day and the data_array
-starting_date=255 #the data for Covid-19 is available from 16th of March
-press_release_id=2801  #add the id of today's press release
+starting_date=256 #the data for Covid-19 is available from 16th of March
+press_release_id=2802  #add the id of today's press release
 data_array={} #this dictionary will store all the data
 case_count={} #dictionary to hold the case count
 lacounty_total_case_count={} #count from the press release
@@ -53,6 +53,8 @@ print(lacounty_total_case_count.keys())
 with open(abs_out_death_count_file, 'r') as jsonfile:
     lacounty_total_death_count=json.load(jsonfile)
 print(lacounty_total_death_count.keys())
+
+del data_array["256"]
 
 
 #write json to a file
@@ -113,9 +115,16 @@ def parse_list(list_object):
         "LA County residents" not in list_object and
         "to date" not in list_object and
         "ICU"  not in list_object and
-        "tested positive" not in list_object
+        "tested" not in list_object and
+        "COVID-19" not in list_object and
+        "ICU" not in list_object and
+        "http" not in list_object and
+        "health" not in list_object and
+        "residents" not in list_object and
+        "Control" not in list_object and 
+        "More than" not in list_object
         ):
-            print("list object"+str(list_object))
+            print("Going to look for data after filtering"+str(list_object))
             if "Los Angeles County (excl. LB and Pas)" in list_object:
                 removed_spaces=(list_object.replace(" ","")).split("LosAngelesCounty(excl.LBandPas)")
                 #print(removed_spaces)
@@ -169,11 +178,11 @@ def parse_list(list_object):
                         out[1]="0"
                     return out
     else:
-        print("+++++++++++++++++++++++++++++++++++")
-        #print(list_object)
+        print("++++++++++++++++else+++++++++++")
+        print(list_object)
         final_list=[]
         s1=list_object.split(")")
-        if len(s1) > 20:
+        if len(s1) > 20 and len(s1) < 50:
             for i in s1:
                 s2=(i.split("\t(\t"))[0].split("\t")
                 if "Under Investigation" not in s2[0]:
@@ -204,7 +213,9 @@ def get_data(urlcomp):
             print(ultag.text)
             print("-------------------------------------------------")
             for litag in ultag.find_all('li'):
+                print("**********************************************")
                 print("litag text"+str(litag.text))
+                print("**********************************************")
                 returned_output=parse_list(litag.text)
                 if returned_output is not None:
                     if len(returned_output) > 20:
