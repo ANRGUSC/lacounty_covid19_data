@@ -44,17 +44,17 @@ abs_out_death_count_file = os.path.join(script_dir, out_path_dfile)
 #parsing json
 with open(abs_file_path, 'r') as jsonfile:
     data_array=json.load(jsonfile)
-print(data_array.keys())
+#print(data_array.keys())
 #parsing total case data json
 with open(abs_file_path_total, 'r') as jsonfile:
     lacounty_total_case_count=json.load(jsonfile)
-print(lacounty_total_case_count.keys())
+#print(lacounty_total_case_count.keys())
 #parsing total death data json
 with open(abs_out_death_count_file, 'r') as jsonfile:
     lacounty_total_death_count=json.load(jsonfile)
-print(lacounty_total_death_count.keys())
+#print(lacounty_total_death_count.keys())
 
-del data_array["256"]
+#del data_array["256"]
 
 
 #write json to a file
@@ -189,6 +189,7 @@ def parse_list(list_object):
                     if "*" in s2[0]:
                          s2[0]=s2[0][:-1]  
                          print(s2[0])
+                    print("adding inside else"+str(s2))     
                     final_list.append(s2)
             print("+++++++++++++++++++++++++++++++++++")
             return final_list        
@@ -200,7 +201,7 @@ def parse_list(list_object):
 def get_data(urlcomp):
     global starting_date,data_array
     rcomp = requests.get(urlcomp, headers=headers)
-    print(rcomp.text)
+    #print(rcomp.text)
     if "Please see the locations where cases have occurred:" in rcomp.text or "Please see additional information below:" or "Laboratory Confirmed Cases"in rcomp.text:
         print("Case numbers found")
         #print(rcomp.text)
@@ -208,7 +209,7 @@ def get_data(urlcomp):
         soup = BeautifulSoup(rcomp.text,"lxml")
         html_content = soup.prettify()
         #print(html_content)
-        for ultag in soup.find_all('ul'):
+        for ultag in soup.find_all('ul',text="Please see additional information below:"):
             print("-------------------------------------------------")
             print(ultag.text)
             print("-------------------------------------------------")
