@@ -11,7 +11,7 @@ import json
 import csv
 from lxml import etree
 from lxml import html
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, SoupStrainer
 import matplotlib.pyplot as plt
 import os
 import time
@@ -122,7 +122,13 @@ def parse_list(list_object):
         "health" not in list_object and
         "residents" not in list_object and
         "Control" not in list_object and 
-        "More than" not in list_object
+        "More than" not in list_object and
+        "plans" not in list_object and
+        "Health" not in list_object and
+        "distancing" not in list_object and
+        "Make sure" not in list_object and
+        "Allow" not in list_object and
+        "Call" not in list_object
         ):
             print("Going to look for data after filtering"+str(list_object))
             if "Los Angeles County (excl. LB and Pas)" in list_object:
@@ -208,11 +214,11 @@ def get_data(urlcomp):
         data_array[starting_date]=[]
         soup = BeautifulSoup(rcomp.text,"lxml")
         html_content = soup.prettify()
-        #print(html_content)
-        for ultag in soup.find_all('ul',text="Please see additional information below:"):
-            print("-------------------------------------------------")
-            print(ultag.text)
-            print("-------------------------------------------------")
+        print(html_content)
+        for ultag in soup.find_all():
+            #print("-------------------------------------------------")
+            #print(ultag.text)
+            #print("-------------------------------------------------")
             for litag in ultag.find_all('li'):
                 print("**********************************************")
                 print("litag text"+str(litag.text))
@@ -227,7 +233,9 @@ def get_data(urlcomp):
         #sometimes the tags are not formatted correctly on the press release                
         if len(data_array[starting_date])<=3:
             print("no data found for day " + str(starting_date))
-            for litag in soup.find_all('li'):
+            #print(html_content)
+            for ultag in soup.find_all('ul',text="Please see additional information below:"):
+                for litag in soup.find_all('li'):
                     returned_output=parse_list(litag.text)
                     if returned_output is not None:
                         data_array[starting_date].append(returned_output)              
@@ -256,4 +264,4 @@ remove_element("Under Investigation")
 remove_element("  -  Under Investigation")
 
 #writing dictionary to a file
-write_json_to_file("lacounty_covid.json",data_array)    
+#write_json_to_file("lacounty_covid.json",data_array)    
