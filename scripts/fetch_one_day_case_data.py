@@ -21,8 +21,8 @@ import sys
 headers = {'accept': "application/json", 'accept': "text/html"}
 
 #global variables for storing day and the data_array
-starting_date=259 #the data for Covid-19 is available from 16th of March
-press_release_id=2807  #add the id of today's press release
+starting_date=260 #the data for Covid-19 is available from 16th of March
+press_release_id=2808  #add the id of today's press release
 data_array={} #this dictionary will store all the data
 case_count={} #dictionary to hold the case count
 lacounty_total_case_count={} #count from the press release
