@@ -27,6 +27,8 @@ data_array={} #this dictionary will store all the data
 case_count={} #dictionary to hold the case count
 lacounty_total_case_count={} #count from the press release
 
+
+
 #setting up the input file path
 script_dir = os.path.dirname(__file__)
 rel_path = "../data/lacounty_covid.json"
@@ -54,7 +56,7 @@ with open(abs_out_death_count_file, 'r') as jsonfile:
     lacounty_total_death_count=json.load(jsonfile)
 #print(lacounty_total_death_count.keys())
 
-#del data_array["256"]
+#del data_array["261"]
 
 
 #write json to a file
@@ -183,22 +185,22 @@ def parse_list(list_object):
                     if not out[1]:
                         out[1]="0"
                     return out
-    else:
-        print("++++++++++++++++else+++++++++++")
-        print(list_object)
-        final_list=[]
-        s1=list_object.split(")")
-        if len(s1) > 20 and len(s1) < 50:
-            for i in s1:
-                s2=(i.split("\t(\t"))[0].split("\t")
-                if "Under Investigation" not in s2[0]:
-                    if "*" in s2[0]:
-                         s2[0]=s2[0][:-1]  
-                         print(s2[0])
-                    print("adding inside else"+str(s2))     
-                    final_list.append(s2)
-            print("+++++++++++++++++++++++++++++++++++")
-            return final_list        
+    # else:
+    #     print("++++++++++++++++else+++++++++++")
+    #     print(list_object)
+    #     final_list=[]
+    #     s1=list_object.split(")")
+    #     if len(s1) > 20 and len(s1) < 50:
+    #         for i in s1:
+    #             s2=(i.split("\t(\t"))[0].split("\t")
+    #             if "Under Investigation" not in s2[0]:
+    #                 if "*" in s2[0]:
+    #                      s2[0]=s2[0][:-1]  
+    #                      print(s2[0])
+    #                 print("adding inside else"+str(s2))     
+    #                 final_list.append(s2)
+    #         print("+++++++++++++++++++++++++++++++++++")
+    #         return final_list        
 
 
 #the following function gets the data and store it into a dictionary
@@ -215,7 +217,7 @@ def get_data(urlcomp):
         soup = BeautifulSoup(rcomp.text,"lxml")
         html_content = soup.prettify()
         print(html_content)
-        for ultag in soup.find_all():
+        for ultag in soup.find_all(text='Please see additional information below:'):
             #print("-------------------------------------------------")
             #print(ultag.text)
             #print("-------------------------------------------------")
@@ -234,11 +236,10 @@ def get_data(urlcomp):
         if len(data_array[starting_date])<=3:
             print("no data found for day " + str(starting_date))
             #print(html_content)
-            for ultag in soup.find_all('ul',text="Please see additional information below:"):
-                for litag in soup.find_all('li'):
-                    returned_output=parse_list(litag.text)
-                    if returned_output is not None:
-                        data_array[starting_date].append(returned_output)              
+            for litag in soup.find_all('li'):
+                returned_output=parse_list(litag.text)
+                if returned_output is not None:
+                    data_array[starting_date].append(returned_output)              
         return
 
 
@@ -264,4 +265,4 @@ remove_element("Under Investigation")
 remove_element("  -  Under Investigation")
 
 #writing dictionary to a file
-#write_json_to_file("lacounty_covid.json",data_array)    
+write_json_to_file("lacounty_covid.json",data_array)    
