@@ -137,7 +137,7 @@ def main(top_i_comm, type_plot,Today_date):
 		days = list(range(1,Today_date-16+1))
 		newlist = sorted(list_communities,key=lambda x: x.confirmed[-1], reverse=True)
 		for en,communiuty_obj in enumerate(newlist):
-			if communiuty_obj.name != '-investigatedcases' and communiuty_obj.name !='-underinvestigation' and top_i_comm > 0:
+			if communiuty_obj.name != '-investigatedcases' and communiuty_obj.name != 'longbeach' and communiuty_obj.name != 'pasadena' and communiuty_obj.name !='-underinvestigation' and communiuty_obj.name !='city' and top_i_comm > 0:
 				# append this city to the list
 				#print(communiuty_obj)
 				list_selected_communities.append(communiuty_obj)
@@ -165,5 +165,5 @@ if __name__ == "__main__":
 	top_k_community_with_highest_confirmed = 6
 	# Display mode: daily or cumulative
 	display_mode = 'cumulative'
-	number_of_days_passed_from_16th = 260 - 16 + 1
+	number_of_days_passed_from_16th = 261 - 16 + 1
 	main(top_k_community_with_highest_confirmed,display_mode, 16 + number_of_days_passed_from_16th)
